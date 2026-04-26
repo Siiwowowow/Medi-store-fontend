@@ -31,7 +31,7 @@ export default function TopBar() {
         onClick={() => setVisible(false)}
         aria-label="Dismiss"
         className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors hover:text-white"
-        style={{ color: "rgba(255,255,255,0.4)" }}
+        style={{ color: "rgba(255,255,255,1)" }}
       >
         <X className="w-3.5 h-3.5" />
       </button>

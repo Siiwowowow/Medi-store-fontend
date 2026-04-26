@@ -63,7 +63,7 @@ const defaultCategories = [
 
 export default function Navbar({ categories = defaultCategories, showTopBar = true }: NavbarProps) {
   return (
-    <header className="sticky top-0 z-50">
+    <header className="sticky top-0 z-50 w-full bg-shop_dark_green shadow-sm">
       {showTopBar && <TopBar />}
       <DesktopNav
         publicLinks={defaultPublicLinks}

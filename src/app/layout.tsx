@@ -38,7 +38,8 @@ export default async function RootLayout({
           <AuthProvider initialUser={user}>
             <TooltipProvider>
               <Navbar />
-              <main className="flex-1 shrink-0 p-4">{children}
+              <main>
+                {children}
                 <Toaster richColors position="top-right" />
               </main>
               <Footer />

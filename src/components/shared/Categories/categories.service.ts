@@ -1,7 +1,6 @@
-// src/services/categories.service.ts
+// src/services/category.service.ts
 
 import { httpClient } from "@/lib/axios/httpClient";
-import { ApiResponse } from "@/types/api.types";
 
 export interface Category {
   id: string;
@@ -17,47 +16,33 @@ export interface Category {
   updatedAt: string;
 }
 
-export interface CategoriesResponse {
-  success: boolean;
-  message: string;
-  data: Category[];
-  meta?: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
-}
 
 export const categoryService = {
-  // ✅ Always return an array (never undefined)
+  // Get all categories - returns Category[]
   getAllCategories: async (params?: { limit?: number; includeInactive?: boolean }): Promise<Category[]> => {
     try {
-      const response = await httpClient.get<CategoriesResponse>("/categories", {
+      const response = await httpClient.get<Category[]>("/categories", {
         params: {
           limit: params?.limit || 8,
           includeInactive: params?.includeInactive || false,
         },
       });
       
-      // ✅ Return data array or empty array if something goes wrong
-      if (response?.data && Array.isArray(response.data)) {
+      if (response?.success && response?.data) {
         return response.data;
       }
-      
       return [];
     } catch (error) {
       console.error("Error fetching categories:", error);
-      // ✅ Return empty array on error instead of undefined
       return [];
     }
   },
 
-  // Get category by ID
+  // Get category by ID - returns Category | null
   getCategoryById: async (id: string): Promise<Category | null> => {
     try {
-      const response = await httpClient.get<{ success: boolean; data: Category }>(`/categories/${id}`);
-      if (response?.data) {
+      const response = await httpClient.get<Category>(`/categories/${id}`);
+      if (response?.success && response?.data) {
         return response.data;
       }
       return null;
@@ -67,16 +52,16 @@ export const categoryService = {
     }
   },
 
-  // Get category by slug
+  // Get category by slug - returns Category | null
   getCategoryBySlug: async (slug: string): Promise<Category | null> => {
     try {
-      const response = await httpClient.get<{ success: boolean; data: Category }>(`/categories/slug/${slug}`);
-      if (response?.data) {
+      const response = await httpClient.get<Category>(`/categories/slug/${slug}`);
+      if (response?.success && response?.data) {
         return response.data;
       }
       return null;
     } catch (error) {
-      console.error("Error fetching category:", error);
+      console.error("Error fetching category by slug:", error);
       return null;
     }
   },
