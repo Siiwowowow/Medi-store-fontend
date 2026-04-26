@@ -7,6 +7,7 @@ import { AuthProvider } from "@/providers/AuthProvider";
 import Navbar from "@/components/shared/Navbar/Navbar";
 import { Toaster } from "sonner";
 import { getUserInfo } from "@/services/auth.services";
+import Footer from "@/components/shared/Footer/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +41,7 @@ export default async function RootLayout({
               <main className="flex-1 shrink-0 p-4">{children}
                 <Toaster richColors position="top-right" />
               </main>
+              <Footer />
             </TooltipProvider>
           </AuthProvider>
         </QueryProviders>

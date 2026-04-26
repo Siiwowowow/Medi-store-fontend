@@ -1,5 +1,3 @@
-// components/shared/Navbar/DesktopNav.tsx
-
 "use client";
 
 import { useUser } from "@/hooks/useUser";
@@ -31,44 +29,52 @@ export default function DesktopNav({
   const { user } = useUser();
   const dashboardRoute = getDashboardRoute(user?.role);
 
-  const navLinks: NavLink[] = [
-    ...publicLinks,
-    ...(user
-      ? [{ label: "Dashboard", href: dashboardRoute, icon: LayoutDashboard }]
-      : []),
-  ];
+  const navLinks: NavLink[] = [...publicLinks];
+  
+  if (user) {
+    navLinks.push({ label: "Dashboard", href: dashboardRoute, icon: LayoutDashboard });
+  }
 
   return (
-    <div className="hidden md:flex flex-col w-full">
-      {/* Top row: Logo + Search + Icons */}
-      <div className="flex items-center justify-between gap-6 h-16 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
-        <Logo />
-
-        <div className="flex-1 max-w-xl">
-          <SearchBar />
+    <div className="hidden md:block w-full">
+      <div className="flex items-center justify-between gap-4 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16">
+        
+        {/* Left Section: Logo + Category Menu + Nav Links */}
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <Logo />
+          
+          {categories.length > 0 && (
+            <>
+              <div className="w-px h-6 bg-gray-200 dark:bg-gray-700 mx-1" />
+              <CategoryMenu categories={categories} />
+            </>
+          )}
+          
+          <div className="w-px h-6 bg-gray-200 dark:bg-gray-700 mx-1" />
+          
+          <div className="flex items-center gap-0.5 overflow-x-auto">
+            <NavLinks links={navLinks} orientation="horizontal" />
+          </div>
         </div>
 
-        <div className="flex items-center gap-1">
+        {/* Right Section: Search + Icons + Auth */}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="w-64">
+            <SearchBar />
+          </div>
+          
           <WishlistIcon count={wishlistCount} />
           <CartIcon count={cartCount} />
+          
           {user ? (
             <div className="ml-1">
               <UserAvatar />
             </div>
           ) : (
-            <div className="ml-2">
+            <div className="ml-1">
               <AuthButtons />
             </div>
           )}
-        </div>
-      </div>
-
-      {/* Bottom row: Category menu + nav links */}
-      <div className="border-t border-gray-100 dark:border-gray-800">
-        <div className="flex items-center gap-2 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 h-11">
-          {categories.length > 0 && <CategoryMenu categories={categories} />}
-          <div className="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1" />
-          <NavLinks links={navLinks} orientation="horizontal" />
         </div>
       </div>
     </div>
