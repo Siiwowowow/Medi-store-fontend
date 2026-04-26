@@ -1,28 +1,37 @@
 "use client";
 
 import { useState } from "react";
-import { X } from "lucide-react";
+import Link from "next/link";
+import { X, Truck } from "lucide-react";
 
 export default function TopBar() {
   const [visible, setVisible] = useState(true);
-
+  
   if (!visible) return null;
 
   return (
-    <div className="bg-gray-900 dark:bg-gray-950 text-white text-xs sm:text-sm py-2 px-4 flex items-center justify-center relative">
-      <p className="text-center">
-        🎉 Free shipping on orders over $50!{" "}
-        <a
-          href="/deals"
-          className="underline font-medium hover:text-gray-300 transition-colors ml-1"
-        >
-          Shop deals
-        </a>
-      </p>
+    <div className="w-full bg-shop_dark_green text-white py-2 px-4 flex items-center justify-center relative">
+      <div className="flex items-center gap-2 text-xs sm:text-sm">
+        <Truck
+          className="w-3.5 h-3.5 shrink-0"
+          style={{ color: "#3b9c3c" }}
+        />
+        <p className="text-center" style={{ color: "rgba(255,255,255,0.8)" }}>
+          Free delivery on orders over ৳500!{" "}
+          <Link
+            href="/shop"
+            className="font-semibold hover:underline underline-offset-2 transition-colors ml-1"
+            style={{ color: "#fb6c08" }}
+          >
+            Shop Now →
+          </Link>
+        </p>
+      </div>
       <button
         onClick={() => setVisible(false)}
-        aria-label="Dismiss announcement"
-        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+        aria-label="Dismiss"
+        className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors hover:text-white"
+        style={{ color: "rgba(255,255,255,0.4)" }}
       >
         <X className="w-3.5 h-3.5" />
       </button>

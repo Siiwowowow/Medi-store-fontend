@@ -5,14 +5,11 @@ import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { SearchBarProps } from "./types";
 
-export default function SearchBar({
-  placeholder = "Search...",
-  onSearch,
-}: SearchBarProps) {
-  const [query, setQuery] = useState("");
+export default function SearchBar({ placeholder = "Search medicines...", onSearch }: SearchBarProps) {
+  const [query,   setQuery]   = useState("");
   const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
+  const router   = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,21 +18,16 @@ export default function SearchBar({
     router.push(`/shop?search=${encodeURIComponent(query.trim())}`);
   };
 
-  const handleClear = () => {
-    setQuery("");
-    inputRef.current?.focus();
-  };
-
   return (
     <form
       onSubmit={handleSubmit}
-      className={`flex items-center w-full bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-1.5 gap-1 transition-all border ${
+      className={`flex items-center w-full rounded-full px-3.5 py-2 gap-2 transition-all duration-200 border ${
         focused
-          ? "border-brand bg-white dark:bg-gray-700 shadow-sm"
-          : "border-transparent"
+          ? "bg-white border-shop_light_green shadow-[0_0_0_3px_rgba(59,156,60,0.12)]"
+          : "bg-shop_light_bg border-gray-200"
       }`}
     >
-      <Search className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+      <Search className={`w-3.5 h-3.5 shrink-0 transition-colors ${focused ? "text-shop_dark_green" : "text-lightColor"}`} />
       <input
         ref={inputRef}
         type="search"
@@ -44,17 +36,13 @@ export default function SearchBar({
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         placeholder={placeholder}
-        className="flex-1 bg-transparent text-xs text-gray-900 dark:text-white placeholder:text-gray-400 outline-none min-w-0"
-        aria-label="Search products"
+        className="flex-1 bg-transparent text-sm text-darkColor placeholder:text-lightColor/60 outline-none min-w-0"
+        style={{ fontFamily: "var(--font-poppins)" }}
+        aria-label="Search medicines"
       />
       {query && (
-        <button
-          type="button"
-          onClick={handleClear}
-          aria-label="Clear search"
-          className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
-        >
-          <X className="w-3 h-3" />
+        <button type="button" onClick={() => { setQuery(""); inputRef.current?.focus(); }} aria-label="Clear">
+          <X className="w-3 h-3 text-lightColor hover:text-darkColor transition-colors" />
         </button>
       )}
     </form>
