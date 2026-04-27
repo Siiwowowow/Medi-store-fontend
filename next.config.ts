@@ -21,14 +21,9 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
-      // লোকাল ডেভেলপমেন্টের জন্য (যদি দরকার হয়)
-      {
-        protocol: "http",
-        hostname: "localhost",
-        port: "3000",
-        pathname: "/**",
-      },
     ],
+    // ✅ Add qualities configuration
+    qualities: [25, 50, 75, 80, 90],
   },
 };
 

@@ -20,6 +20,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.99.0
         version: 5.99.0(react@19.2.4)
+      '@tanstack/react-query-devtools':
+        specifier: ^5.100.5
+        version: 5.100.5(@tanstack/react-query@5.99.0(react@19.2.4))(react@19.2.4)
       '@tanstack/react-query-next-experimental':
         specifier: ^5.99.0
         version: 5.99.0(@tanstack/react-query@5.99.0(react@19.2.4))(next@16.2.3(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
@@ -41,6 +44,9 @@ importers:
       embla-carousel-react:
         specifier: ^8.6.0
         version: 8.6.0(react@19.2.4)
+      framer-motion:
+        specifier: ^12.38.0
+        version: 12.38.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       input-otp:
         specifier: ^1.4.2
         version: 1.4.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -1523,6 +1529,9 @@ packages:
   '@tanstack/query-core@5.99.0':
     resolution: {integrity: sha512-3Jv3WQG0BCcH7G+7lf/bP8QyBfJOXeY+T08Rin3GZ1bshvwlbPt7NrDHMEzGdKIOmOzvIQmxjk28YEQX60k7pQ==}
 
+  '@tanstack/query-devtools@5.100.5':
+    resolution: {integrity: sha512-SuCkVCqqliRYJvm+LEL2U/TcFv92zTnHj6OGrJFHp1v/RsiwamI+ZDgQzbeUrLsJb8/Nj/52aIw0NyDMcVHl4A==}
+
   '@tanstack/react-form@1.29.0':
     resolution: {integrity: sha512-jj425NNX0QKqbUzqSNiYI3HCPHSk2df47acXCJyXczWOTmG81ECZGkgofgqamFsSU9kMiH6Di5RLUnftrlhWSw==}
     peerDependencies:
@@ -1531,6 +1540,12 @@ packages:
     peerDependenciesMeta:
       '@tanstack/react-start':
         optional: true
+
+  '@tanstack/react-query-devtools@5.100.5':
+    resolution: {integrity: sha512-bItQERx7dJoiI0WEoS4tIrvNnmk4kUYsaQLdIpm4o9Kttmsi5B6xlY6JBDkavstR3hH/R2+VT5dr3L5LBFPW4g==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.100.5
+      react: ^18 || ^19
 
   '@tanstack/react-query-next-experimental@5.99.0':
     resolution: {integrity: sha512-jPKWMKb4LXpsApNoirMCazUEXe1lK3WobVlSgoCIRkygBTzrYw16A4wQubY1vzERp3js55Fqfl+UI0JdVxpCdw==}
@@ -2648,6 +2663,20 @@ packages:
     resolution: {integrity: sha512-buRG0fpBtRHSTCOASe6hD258tEubFoRLb4ZNA6NxMVHNw2gOcwHo9wyablzMzOA5z9xA9L1KNjk/Nt6MT9aYow==}
     engines: {node: '>= 0.6'}
 
+  framer-motion@12.38.0:
+    resolution: {integrity: sha512-rFYkY/pigbcswl1XQSb7q424kSTQ8q6eAC+YUsSKooHQYuLdzdHjrt6uxUC+PRAO++q5IS7+TamgIw1AphxR+g==}
+    peerDependencies:
+      '@emotion/is-prop-valid': '*'
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@emotion/is-prop-valid':
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+
   fresh@0.1.0:
     resolution: {integrity: sha512-ROG9M8tikYOuOJsvRBggh10WiQ/JebnldAwuCaQyFoiAUIE9XrYVnpznIjOQGZfCMzxzEBYHQr/LHJp3tcndzQ==}
 
@@ -3343,6 +3372,12 @@ packages:
 
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
+
+  motion-dom@12.38.0:
+    resolution: {integrity: sha512-pdkHLD8QYRp8VfiNLb8xIBJis1byQ9gPT3Jnh2jqfFtAsWUA3dEepDlsWe/xMpO8McV+VdpKVcp+E+TGJEtOoA==}
+
+  motion-utils@12.36.0:
+    resolution: {integrity: sha512-eHWisygbiwVvf6PZ1vhaHCLamvkSbPIeAYxWUuL3a2PD/TROgE7FvfHWTIH4vMl798QLfMw15nRqIaRDXTlYRg==}
 
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
@@ -5770,6 +5805,8 @@ snapshots:
 
   '@tanstack/query-core@5.99.0': {}
 
+  '@tanstack/query-devtools@5.100.5': {}
+
   '@tanstack/react-form@1.29.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@tanstack/form-core': 1.29.0
@@ -5777,6 +5814,12 @@ snapshots:
       react: 19.2.4
     transitivePeerDependencies:
       - react-dom
+
+  '@tanstack/react-query-devtools@5.100.5(@tanstack/react-query@5.99.0(react@19.2.4))(react@19.2.4)':
+    dependencies:
+      '@tanstack/query-devtools': 5.100.5
+      '@tanstack/react-query': 5.99.0(react@19.2.4)
+      react: 19.2.4
 
   '@tanstack/react-query-next-experimental@5.99.0(@tanstack/react-query@5.99.0(react@19.2.4))(next@16.2.3(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)':
     dependencies:
@@ -7054,6 +7097,15 @@ snapshots:
 
   forwarded@0.2.0: {}
 
+  framer-motion@12.38.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+    dependencies:
+      motion-dom: 12.38.0
+      motion-utils: 12.36.0
+      tslib: 2.8.1
+    optionalDependencies:
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
+
   fresh@0.1.0: {}
 
   fresh@2.0.0: {}
@@ -7666,6 +7718,12 @@ snapshots:
       brace-expansion: 1.1.14
 
   minimist@1.2.8: {}
+
+  motion-dom@12.38.0:
+    dependencies:
+      motion-utils: 12.36.0
+
+  motion-utils@12.36.0: {}
 
   ms@2.1.3: {}
 

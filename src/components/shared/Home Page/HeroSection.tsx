@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -35,7 +36,7 @@ const slides = [
     title: "Save Up to",
     highlight: "30% OFF",
     description: "Best prices on vitamins & supplements. Genuine products guaranteed.",
-    image: "https://images.unsplash.com/photo-1628771065518-0d82f1938462?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fG1lZGljaW5lfGVufDB8fDB8fHww",
+    image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&h=600&fit=crop",
     ctaText: "Shop Vitamins",
     ctaLink: "/shop?category=vitamins",
     badge: "⚡ Mega Sale",
@@ -49,7 +50,7 @@ const slides = [
     title: "Free Delivery",
     highlight: "On Orders $30+",
     description: "Get your medicines delivered at your doorstep. Cash on delivery available.",
-    image: "https://images.unsplash.com/photo-1622227922682-56c92e523e58?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzZ8fG1lZGljaW5lfGVufDB8fDB8fHww",
+    image: "https://images.unsplash.com/photo-1617881770125-6fb0d039ecde?w=800&h=600&fit=crop",
     ctaText: "Explore Now",
     ctaLink: "/shop",
     badge: "🚚 Free Shipping",
@@ -100,7 +101,7 @@ export default function HeroSection() {
         <div className="absolute bottom-10 right-5 w-56 h-56 rounded-full blur-2xl" style={{ background: "#fb6c0810" }}></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-8 py-12 md:py-16">
+      <div className="relative max-w-[1280px] mx-auto px-4 sm:px-8 py-12 md:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           
           {/* LEFT CONTENT */}
@@ -152,8 +153,8 @@ export default function HeroSection() {
               {features.map((feature, idx) => (
                 <div key={idx} className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "rgba(255,255,255,0.1)" }}>
-  <feature.icon className="w-4 h-4 text-white" />
-</div>
+                    <feature.icon className="w-4 h-4" style={{ color: "white" }} />
+                  </div>
                   <div>
                     <p className="font-semibold text-sm" style={{ color: "white" }}>{feature.title}</p>
                     <p className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>{feature.desc}</p>
@@ -163,24 +164,20 @@ export default function HeroSection() {
             </div>
           </div>
           
-          {/* RIGHT SIDE - Product Showcase with Next.js Image */}
+          {/* RIGHT SIDE - Product Showcase */}
           <div className="relative">
             {/* Discount Badge */}
             <div className="absolute -top-3 -right-3 z-20 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg" style={{ background: "#fb6c08", color: "white" }}>
               {current.discount}
             </div>
 
-            {/* Carousel Container with Next.js Image */}
+            {/* Carousel Container */}
             <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-white">
               <div className="relative aspect-4/3">
-                <Image
+               <img
                   src={current.image}
-                  alt={current.alt}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  priority
-                  quality={90}
+                  alt={current.productName}
+                  className="w-full h-full object-cover rounded-xl"
                 />
                 
                 {/* Product Name Overlay */}

@@ -1,54 +1,45 @@
-// In Next.js, this file would be called: app/providers.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// app/providers.tsx or src/providers/QueryProvider.tsx
 "use client";
 
-// Since QueryClientProvider relies on useContext under the hood, we have to put 'use client' on top
-import {
-    isServer,
-    QueryClient,
-    QueryClientProvider,
-} from "@tanstack/react-query";
+import { useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from '@tanstack/react-query-next-experimental';
 
-function makeQueryClient() {
-  return new QueryClient({
-    defaultOptions: {
-      queries: {
-        // With SSR, we usually want to set some default staleTime
-        // above 0 to avoid refetching immediately on the client
-        staleTime: 60 * 1000,
-      },
-    },
-  });
-}
-
-let browserQueryClient: QueryClient | undefined = undefined;
-
-function getQueryClient() {
-  if (isServer) {
-    // Server: always make a new query client
-    return makeQueryClient();
-  } else {
-    // Browser: make a new query client if we don't already have one
-    // This is very important, so we don't re-make a new client if React
-    // suspends during the initial render. This may not be needed if we
-    // have a suspense boundary BELOW the creation of the query client
-    if (!browserQueryClient) browserQueryClient = makeQueryClient();
-    return browserQueryClient;
-  }
-}
 
 export default function QueryProviders({ children }: { children: React.ReactNode }) {
-  // NOTE: Avoid useState when initializing the query client if you don't
-  //       have a suspense boundary between this and the code that may
-  //       suspend because React will throw away the client on the initial
-  //       render if it suspends and there is no boundary
-  const queryClient = getQueryClient();
+  const [queryClient] = useState(
+    () => new QueryClient({
+      defaultOptions: {
+        queries: {
+          // Cache duration - show cached data instantly
+          staleTime: 5 * 60 * 1000,      // 5 minutes - data considered fresh
+          gcTime: 30 * 60 * 1000,        // 30 minutes - keep in cache
+          
+          // Retry logic
+          retry: 2,                       // Retry failed requests twice
+          retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+          
+          // Refetch behavior
+          refetchOnWindowFocus: false,    // Don't refetch on tab focus
+          refetchOnMount: true,           // Refetch if stale
+          refetchOnReconnect: false,      // Don't refetch on reconnect
+          
+          // UI behavior
+          placeholderData: (previousData: any) => previousData, // Show old data while fetching
+        },
+      },
+    })
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryStreamedHydration>
+       <ReactQueryStreamedHydration>
         {children}
       </ReactQueryStreamedHydration>
+      
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import TopBar from "./TopBar";
 import DesktopNav from "./DesktopNav";
 import MobileNav from "./MobileNav";
 import type { NavbarProps } from "./types";
@@ -64,7 +63,7 @@ const defaultCategories = [
 export default function Navbar({ categories = defaultCategories, showTopBar = true }: NavbarProps) {
   return (
     <header className="sticky top-0 z-50 w-full bg-shop_dark_green shadow-sm">
-      {showTopBar && <TopBar />}
+      {showTopBar}
       <DesktopNav
         publicLinks={defaultPublicLinks}
         categories={categories}

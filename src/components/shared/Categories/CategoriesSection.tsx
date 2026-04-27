@@ -1,11 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronRight, Package, AlertCircle } from "lucide-react";
+import { ChevronRight, Package, AlertCircle, Database } from "lucide-react";
 import { categoryService } from "./categories.service";
 
-// Fallback icons for categories
 const categoryIcons: Record<string, string> = {
   "Pain Relief": "💊",
   "Cold & Flu": "🤧",
@@ -26,20 +26,22 @@ const getCategoryIcon = (name: string): string => {
 
 export default function CategoriesSection() {
   const {
-    data: categories = [], // ✅ Default to empty array
+    data: categories = [],
     isLoading,
     error,
+    isFetching,           // 👈 Background fetch indicator
+    isPlaceholderData,    // 👈 Showing cached data
   } = useQuery({
     queryKey: ["categories", "homepage"],
     queryFn: () => categoryService.getAllCategories({ limit: 8 }),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    // ✅ Add these options for better error handling
+    staleTime: 5 * 60 * 1000,
     retry: 1,
     refetchOnWindowFocus: false,
+    placeholderData: (previousData) => previousData, // 👈 Keep showing old data
   });
 
-  // Loading State
-  if (isLoading) {
+  // Loading State (only first time)
+  if (isLoading && categories.length === 0) {
     return (
       <section className="py-12 md:py-16 bg-shop_light_bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
@@ -47,7 +49,6 @@ export default function CategoriesSection() {
             <div className="h-8 w-48 bg-gray-200 rounded-full mx-auto mb-3 animate-pulse"></div>
             <div className="h-4 w-64 bg-gray-200 rounded-full mx-auto animate-pulse"></div>
           </div>
-          
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-4">
             {[...Array(8)].map((_, i) => (
               <div key={i} className="bg-white rounded-2xl p-4 animate-pulse shadow-sm">
@@ -62,7 +63,6 @@ export default function CategoriesSection() {
     );
   }
 
-  // Error State
   if (error) {
     return (
       <section className="py-12 md:py-16 bg-shop_light_bg">
@@ -83,7 +83,6 @@ export default function CategoriesSection() {
     );
   }
 
-  // Empty State
   if (!categories || categories.length === 0) {
     return (
       <section className="py-12 md:py-16 bg-shop_light_bg">
@@ -101,7 +100,7 @@ export default function CategoriesSection() {
   return (
     <section className="py-12 md:py-16 bg-shop_light_bg">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
-        {/* Section Header */}
+        {/* Section Header with Cache Indicator */}
         <div className="text-center mb-10">
           <h2 className="text-2xl md:text-3xl font-bold font-poppins mb-3" style={{ color: "#063c28" }}>
             Shop by Categories
@@ -109,19 +108,31 @@ export default function CategoriesSection() {
           <p className="text-lightColor max-w-2xl mx-auto">
             Browse our top categories and find your medicine
           </p>
+          
+          {/* 👇 Optional: Cache Status Indicator */}
+          {isPlaceholderData && !isFetching && (
+            <div className="inline-flex items-center gap-1 mt-2 px-2 py-1 rounded-full bg-gray-100 text-xs text-gray-500">
+              <Database className="w-3 h-3" />
+              <span>From cache</span>
+            </div>
+          )}
+          {isFetching && !isLoading && (
+            <div className="inline-flex items-center gap-1 mt-2 px-2 py-1 rounded-full bg-blue-50 text-xs text-blue-500 animate-pulse">
+              <span>Updating...</span>
+            </div>
+          )}
         </div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
+        {/* Categories Grid - 8 cards (2x4) */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-4">
           {categories.map((category) => (
             <Link
               key={category.id}
               href={`/category/${category.slug}`}
-              className="group bg-white rounded-2xl p-8 text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] border border-gray-100"
+              className="group bg-white rounded-2xl p-4 text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] border border-gray-100"
             >
               <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-shop_light_pink flex items-center justify-center text-3xl group-hover:scale-110 transition-transform duration-300">
                 {category.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={category.image}
                     alt={category.name}
@@ -143,7 +154,6 @@ export default function CategoriesSection() {
           ))}
         </div>
 
-        {/* View All Link */}
         <div className="text-center mt-10">
           <Link
             href="/shop"
