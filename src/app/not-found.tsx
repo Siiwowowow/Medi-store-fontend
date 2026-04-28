@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-orange-50 to-white px-4 text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-linear-to-br from-orange-50 to-white px-4 text-center">
 
       {/* Big 404 */}
       <h1 className="text-7xl md:text-8xl font-extrabold text-orange-500">
@@ -39,10 +39,6 @@ export default function NotFound() {
         </button>
       </div>
 
-      {/* Fun visual element */}
-      <div className="mt-10 text-6xl animate-bounce">
-        😕
-      </div>
     </div>
   );
 }

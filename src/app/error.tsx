@@ -15,7 +15,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-white px-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-orange-50 to-white px-4">
       <div className="max-w-md w-full text-center">
 
         {/* Icon */}

@@ -38,20 +38,20 @@ export interface ApiRequestOptions {
     headers?: Record<string, string>;
 }
 
-const httpGet = async <TData>(endpoint: string, options?: ApiRequestOptions) : Promise<ApiResponse<TData>> => {
-    try {     
-        const instance = axiosInstance();   
-        const response = await instance.get<ApiResponse<TData>>(endpoint, {
-            params: options?.params,
-            headers: options?.headers,
-        });
-        return response.data;
-    } catch (error) {       
-        console.error(`GET request to ${endpoint} failed:`, error);
-        throw error;
-    }
-}
-
+// Make sure your httpClient.get is sending params correctly
+const httpGet = async <TData>(endpoint: string, options?: ApiRequestOptions): Promise<ApiResponse<TData>> => {
+  try {
+    const instance = axiosInstance();
+    const response = await instance.get<ApiResponse<TData>>(endpoint, {
+      params: options?.params,  // ✅ This should work
+      headers: options?.headers,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`GET request to ${endpoint} failed:`, error);
+    throw error;
+  }
+};
 const httpPost = async <TData>(endpoint: string, data: unknown, options?: ApiRequestOptions) : Promise<ApiResponse<TData>> => {
     try {
         const response = await axiosInstance().post<ApiResponse<TData>>(endpoint, data, {
