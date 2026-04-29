@@ -1,245 +1,197 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import { useState } from "react";
 import { Search, X } from "lucide-react";
-import type { Filters } from "./ShopClient";
+import { useState, useEffect } from "react";
 import type { Category } from "@/services/category.service";
 
-interface Props {
+interface Filters {
+  search: string;
+  categoryId: string;
+  manufacturer: string;
+  minPrice: number;
+  maxPrice: number;
+  availability: string;
+}
+
+interface FilterSidebarProps {
   filters: Filters;
   categories: Category[];
   manufacturers: string[];
   onUpdate: (key: keyof Filters, value: string | number) => void;
   onClear: (key: keyof Filters) => void;
+  onApply: () => void;
 }
 
-export default function FilterSidebar({ filters, categories = [], manufacturers = [], onUpdate, onClear }: Props) {
-  const [localSearch, setLocalSearch] = useState(filters.search);
-  const [showAllBrands, setShowAllBrands] = useState(false);
-  const [showAllCategories, setShowAllCategories] = useState(false);
+export default function FilterSidebar({ 
+  filters, 
+  categories, 
+  manufacturers, 
+  onUpdate, 
+  onClear, 
+  onApply 
+}: FilterSidebarProps) {
+  const [searchLocal, setSearchLocal] = useState(filters.search);
+  const [minPriceLocal, setMinPriceLocal] = useState(filters.minPrice);
+  const [maxPriceLocal, setMaxPriceLocal] = useState(filters.maxPrice);
 
-  // ✅ Ensure categories is an array before using slice
-  const categoriesArray = Array.isArray(categories) ? categories : [];
-  const manufacturersArray = Array.isArray(manufacturers) ? manufacturers : [];
-
-  const visibleCategories = showAllCategories ? categoriesArray : categoriesArray.slice(0, 8);
-  const visibleBrands = showAllBrands ? manufacturersArray : manufacturersArray.slice(0, 6);
+  useEffect(() => {
+    setSearchLocal(filters.search);
+    setMinPriceLocal(filters.minPrice);
+    setMaxPriceLocal(filters.maxPrice);
+  }, [filters.search, filters.minPrice, filters.maxPrice]);
 
   const handleSearchKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      onUpdate("search", localSearch);
+      onUpdate("search", searchLocal);
     }
   };
 
+  const handlePriceApply = () => {
+    onUpdate("minPrice", minPriceLocal);
+    onUpdate("maxPrice", maxPriceLocal);
+  };
+
+  const visibleCategories = categories.slice(0, 6);
+  const visibleManufacturers = manufacturers.slice(0, 5);
+
   return (
-    <div
-      className="bg-white border border-gray-200 rounded-2xl overflow-hidden sticky top-[136px]"
-      style={{ maxHeight: "calc(100vh - 160px)", overflowY: "auto" }}
-    >
+    <div className="w-[260px] flex-shrink-0 bg-white border-r border-gray-100 p-5 min-h-screen sticky top-[72px]">
       {/* Search */}
-      <div className="p-3.5 pb-0">
-        <div className="flex items-center gap-2 rounded-xl px-3 h-10" style={{ background: "#f6f6f6" }}>
-          <Search className="w-3.5 h-3.5" style={{ color: "#9ca3af" }} />
-          <input
-            type="text"
-            value={localSearch}
-            onChange={(e) => setLocalSearch(e.target.value)}
-            onKeyDown={handleSearchKeyDown}
-            placeholder="Search medicines..."
-            className="flex-1 bg-transparent border-none outline-none text-sm"
-            style={{ color: "#151515", fontFamily: "var(--font-poppins)" }}
-          />
-          {localSearch && (
-            <button onClick={() => { setLocalSearch(""); onUpdate("search", ""); }}>
-              <X className="w-3 h-3" style={{ color: "#9ca3af" }} />
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Categories - Only show if categories exist */}
-      {categoriesArray.length > 0 && (
-        <Section
-          label="CATEGORY"
-          hasActive={!!filters.categoryId}
-          onClear={() => onClear("categoryId")}
-        >
-          {visibleCategories.map((cat) => (
-            <FilterRow
-              key={cat.id}
-              name={cat.name}
-              count={cat._count?.medicines || 0}
-              active={filters.categoryId === cat.id}
-              onClick={() =>
-                filters.categoryId === cat.id
-                  ? onClear("categoryId")
-                  : onUpdate("categoryId", cat.id)
-              }
-            />
-          ))}
-          {categoriesArray.length > 8 && (
-            <button
-              onClick={() => setShowAllCategories(!showAllCategories)}
-              className="mt-1 text-[11px] font-semibold text-[#063c28] hover:underline"
-            >
-              {showAllCategories ? "Show less ↑" : `Show ${categoriesArray.length - 8} more ↓`}
-            </button>
-          )}
-        </Section>
-      )}
-
-      {/* Price Range */}
-      <Section
-        label="PRICE"
-        hasActive={filters.minPrice > 0 || filters.maxPrice < 10000}
-        onClear={() => {
-          onClear("minPrice");
-          onClear("maxPrice");
-        }}
-      >
-        <div className="flex gap-2">
-          <div className="flex-1 relative">
-            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[11px] text-[#9ca3af]">৳</span>
-            <input
-              type="number"
-              value={filters.minPrice || ""}
-              onChange={(e) => onUpdate("minPrice", Number(e.target.value))}
-              placeholder="Min"
-              className="w-full h-9 rounded-lg bg-[#f6f6f6] border-transparent text-center text-xs outline-none focus:border-[#063c28] focus:bg-white"
-            />
-          </div>
-          <div className="flex-1 relative">
-            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[11px] text-[#9ca3af]">৳</span>
-            <input
-              type="number"
-              value={filters.maxPrice === 10000 ? "" : filters.maxPrice}
-              onChange={(e) => onUpdate("maxPrice", Number(e.target.value))}
-              placeholder="Max"
-              className="w-full h-9 rounded-lg bg-[#f6f6f6] border-transparent text-center text-xs outline-none focus:border-[#063c28] focus:bg-white"
-            />
-          </div>
-        </div>
-      </Section>
-
-      {/* Availability */}
-      <Section label="AVAILABILITY" hasActive={false} onClear={() => {}}>
-        <div className="flex gap-1.5 flex-wrap">
-          {["All", "In Stock", "Out of Stock"].map((opt, i) => (
-            <button
-              key={opt}
-              className="px-3 py-1 rounded-full text-xs font-semibold transition-all"
-              style={{
-                background: i === 0 ? "#063c28" : "#f1f3f8",
-                color: i === 0 ? "#ffffff" : "#52525b",
-              }}
-            >
-              {opt}
-            </button>
-          ))}
-        </div>
-      </Section>
-
-      {/* Brands - Only show if manufacturers exist */}
-      {manufacturersArray.length > 0 && (
-        <Section
-          label="BRAND"
-          hasActive={!!filters.manufacturer}
-          onClear={() => onClear("manufacturer")}
-          last
-        >
-          {visibleBrands.map((brand) => (
-            <FilterRow
-              key={brand}
-              name={brand}
-              active={filters.manufacturer === brand}
-              onClick={() =>
-                filters.manufacturer === brand
-                  ? onClear("manufacturer")
-                  : onUpdate("manufacturer", brand)
-              }
-            />
-          ))}
-          {manufacturersArray.length > 6 && (
-            <button
-              onClick={() => setShowAllBrands(!showAllBrands)}
-              className="mt-1 text-[11px] font-semibold text-[#063c28] hover:underline"
-            >
-              {showAllBrands ? "Show less ↑" : `Show ${manufacturersArray.length - 6} more ↓`}
-            </button>
-          )}
-        </Section>
-      )}
-    </div>
-  );
-}
-
-// Reusable Section Component
-function Section({
-  label,
-  children,
-  hasActive,
-  onClear,
-  last = false,
-}: {
-  label: string;
-  children: React.ReactNode;
-  hasActive: boolean;
-  onClear: () => void;
-  last?: boolean;
-}) {
-  return (
-    <div className="px-[18px] py-4" style={{ borderBottom: last ? "none" : "1px solid #e5e7eb" }}>
-      <div className="flex justify-between items-center mb-3">
-        <span className="text-[10px] font-bold uppercase tracking-[.08em] text-[#9ca3af]">{label}</span>
-        {hasActive && (
-          <button onClick={onClear} className="text-[10px] font-semibold text-[#fb6c08] hover:underline">
-            Clear
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+        <input
+          type="text"
+          value={searchLocal}
+          onChange={(e) => setSearchLocal(e.target.value)}
+          onKeyDown={handleSearchKeyDown}
+          placeholder="Search medicines..."
+          className="w-full h-10 pl-9 pr-3 bg-[#f6f6f6] rounded-xl text-sm outline-none focus:ring-1 focus:ring-[#063c28]"
+        />
+        {searchLocal && (
+          <button onClick={() => { setSearchLocal(""); onUpdate("search", ""); }} className="absolute right-3 top-1/2 -translate-y-1/2">
+            <X className="w-3.5 h-3.5 text-gray-400" />
           </button>
         )}
       </div>
-      <div className="flex flex-col gap-0.5">{children}</div>
-    </div>
-  );
-}
 
-// Filter Row Component
-function FilterRow({
-  name,
-  count,
-  active,
-  onClick,
-}: {
-  name: string;
-  count?: number;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="w-full flex items-center justify-between px-2 py-2 rounded-lg transition-colors text-left"
-      style={{ background: active ? "#fcf0e4" : "transparent" }}
-      onMouseEnter={(e) => {
-        if (!active) (e.currentTarget as HTMLButtonElement).style.background = "#f6f6f6";
-      }}
-      onMouseLeave={(e) => {
-        if (!active) (e.currentTarget as HTMLButtonElement).style.background = "transparent";
-      }}
-    >
-      <span className="text-sm" style={{ color: active ? "#063c28" : "#52525b", fontWeight: active ? 600 : 400 }}>
-        {name}
-      </span>
-      {count !== undefined && (
-        <span
-          className="text-[11px] rounded-full px-2 py-0.5"
-          style={{
-            background: active ? "rgba(6,60,40,0.08)" : "#f1f3f8",
-            color: active ? "#063c28" : "#9ca3af",
-          }}
-        >
-          {count}
-        </span>
+      {/* Categories */}
+      {visibleCategories.length > 0 && (
+        <div className="mt-6">
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="text-sm font-semibold text-[#151515]">Categories</h3>
+            {filters.categoryId && (
+              <button onClick={() => onClear("categoryId")} className="text-[10px] text-[#fb6c08]">Clear</button>
+            )}
+          </div>
+          <div className="space-y-2">
+            {visibleCategories.map((cat) => (
+              <label key={cat.id} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={filters.categoryId === cat.id}
+                  onChange={() => onUpdate("categoryId", filters.categoryId === cat.id ? "" : cat.id)}
+                  className="w-4 h-4 rounded accent-[#063c28]"
+                />
+                <span className="text-sm text-[#52525b] flex-1">{cat.name}</span>
+                <span className="text-[10px] bg-[#f1f3f8] rounded-full px-2 py-0.5 text-[#52525b]">
+                  {cat._count?.medicines || 0}
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
       )}
-    </button>
+
+      {/* Price Range */}
+      <div className="mt-6">
+        <div className="flex justify-between items-center mb-3">
+          <h3 className="text-sm font-semibold text-[#151515]">Price Range</h3>
+          {(filters.minPrice > 0 || filters.maxPrice < 10000) && (
+            <button onClick={() => { onClear("minPrice"); onClear("maxPrice"); }} className="text-[10px] text-[#fb6c08]">Clear</button>
+          )}
+        </div>
+        <div className="flex gap-2 mb-3">
+          <div className="flex-1">
+            <span className="text-xs text-gray-400">৳</span>
+            <input
+              type="number"
+              value={minPriceLocal}
+              onChange={(e) => setMinPriceLocal(Number(e.target.value))}
+              placeholder="Min"
+              className="w-full h-9 bg-[#f6f6f6] rounded-lg text-center text-sm text-[#151515]"
+            />
+          </div>
+          <div className="flex-1">
+            <span className="text-xs text-gray-400">৳</span>
+            <input
+              type="number"
+              value={maxPriceLocal}
+              onChange={(e) => setMaxPriceLocal(Number(e.target.value))}
+              placeholder="Max"
+              className="w-full h-9 bg-[#f6f6f6] rounded-lg text-center text-sm text-[#151515]"
+            />
+          </div>
+        </div>
+        <button
+          onClick={handlePriceApply}
+          className="w-full h-8 bg-[#063d29] text-white text-xs rounded-lg font-medium hover:bg-[#052e1f] transition"
+        >
+          Apply Price
+        </button>
+      </div>
+
+      {/* Manufacturer */}
+      {visibleManufacturers.length > 0 && (
+        <div className="mt-6">
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="text-sm font-semibold text-[#151515]">Manufacturer</h3>
+            {filters.manufacturer && <button onClick={() => onClear("manufacturer")} className="text-[10px] text-[#fb6c08]">Clear</button>}
+          </div>
+          <div className="space-y-2">
+            {visibleManufacturers.map((brand) => (
+              <label key={brand} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={filters.manufacturer === brand}
+                  onChange={() => onUpdate("manufacturer", filters.manufacturer === brand ? "" : brand)}
+                  className="w-4 h-4 rounded accent-[#063c28]"
+                />
+                <span className="text-sm text-[#52525b]">{brand}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Availability */}
+      <div className="mt-6">
+        <h3 className="text-sm font-semibold text-[#151515] mb-3">Availability</h3>
+        <div className="flex gap-2">
+          {[
+            { label: "All", value: "all" },
+            { label: "In Stock", value: "instock" },
+            { label: "Out of Stock", value: "outofstock" },
+          ].map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => onUpdate("availability", opt.value)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${
+                filters.availability === opt.value
+                  ? "bg-[#063c28] text-white border border-[#063c28]"
+                  : "bg-white border border-gray-200 text-[#52525b] hover:border-[#063c28]"
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Apply Button */}
+      <button onClick={onApply} className="w-full mt-6 bg-[#063d29] text-white h-10 rounded-xl font-semibold sticky bottom-0">
+        Apply Filters
+      </button>
+    </div>
   );
 }

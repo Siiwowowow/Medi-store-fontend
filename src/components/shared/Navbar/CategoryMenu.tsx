@@ -56,7 +56,7 @@ export default function CategoryMenu({ categories }: CategoryMenuProps) {
         aria-expanded={open}
       >
         <LayoutGrid className="w-3.5 h-3.5 shrink-0" />
-        <span>Categories</span>
+        <span className="hidden lg:inline">Categories</span>
         <ChevronDown
           className="w-3.5 h-3.5 transition-transform duration-200"
           style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}

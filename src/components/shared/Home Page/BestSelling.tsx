@@ -32,27 +32,29 @@ const ProductCard = ({ product }: { product: Product }) => {
 
   return (
     <div className="bg-white rounded-xl border border-gray-100 hover:shadow-md transition p-3 group">
-      <div className="relative h-32 w-full rounded-lg overflow-hidden mb-3 bg-gray-50">
+      <Link href={`/shop/${product.id}`} className="relative block h-32 w-full rounded-lg overflow-hidden mb-3 bg-gray-50">
         <Image
-  src={product.image || "/product-placeholder.jpg"}
-  alt={product.name}
-  fill
-  sizes="(max-width: 768px) 50vw, 25vw"
-  loading="eager"
-  className="object-cover"
-/>
+          src={product.image || "/product-placeholder.jpg"}
+          alt={product.name}
+          fill
+          sizes="(max-width: 768px) 50vw, 25vw"
+          loading="eager"
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+        />
         <span className="absolute top-2 left-2 text-[10px] px-2 py-0.5 bg-orange-500 text-white rounded">
           BEST SELLER
         </span>
-      </div>
+      </Link>
 
       <p className="text-[10px] text-green-600 font-medium uppercase">
         {product.category?.name || "Medicine"}
       </p>
 
-      <h3 className="text-sm font-semibold text-gray-800 line-clamp-1 mt-1">
-        {product.name}
-      </h3>
+      <Link href={`/shop/${product.id}`}>
+        <h3 className="text-sm font-semibold text-gray-800 line-clamp-1 mt-1 hover:text-green-700 transition">
+          {product.name}
+        </h3>
+      </Link>
 
       <div className="flex items-center gap-1 mt-1">
         {[...Array(5)].map((_, i) => (

@@ -48,26 +48,21 @@ export default function DesktopNav({
       style={{ background: "#063c28" }}
     >
       <div
-        className="flex items-center justify-between gap-4"
-        style={{
-          maxWidth:  "1280px",
-          margin:    "0 auto",
-          padding:   "0 32px",
-          height:    "72px",
-          // ⚠️ No overflow:hidden — critical for dropdown visibility
-        }}
+        className="flex items-center justify-between gap-2 px-4 lg:px-8 mx-auto h-[72px] max-w-[1280px]"
       >
         {/* ── LEFT: Logo + divider + Categories + divider + Nav ── */}
-        <div className="flex items-center gap-3 min-w-0" style={{ flex: 1 }}>
+        <div className="flex items-center gap-2 lg:gap-3 min-w-0 flex-1">
           <Logo />
 
-          <div style={{ width: "1px", height: "24px", background: "rgba(255,255,255,0.15)", flexShrink: 0 }} />
+          <div className="w-px h-6 bg-white/15 shrink-0" />
 
           {categories.length > 0 && (
-            <CategoryMenu categories={categories} />
+            <div className="flex items-center">
+              <CategoryMenu categories={categories} />
+            </div>
           )}
 
-          <div style={{ width: "1px", height: "24px", background: "rgba(255,255,255,0.15)", flexShrink: 0 }} />
+          <div className="w-px h-6 bg-white/15 shrink-0" />
 
           {/* Nav links — NO overflow:hidden, NO overflow-x:auto */}
           <NavLinks links={navLinks} orientation="horizontal" />

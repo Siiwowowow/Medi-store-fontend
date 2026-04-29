@@ -2,6 +2,7 @@
 
 import DesktopNav from "./DesktopNav";
 import MobileNav from "./MobileNav";
+import TopBar from "./TopBar";
 import type { NavbarProps } from "./types";
 import { Home, Info, Phone, Pill } from "lucide-react";
 
@@ -63,7 +64,7 @@ const defaultCategories = [
 export default function Navbar({ categories = defaultCategories, showTopBar = true }: NavbarProps) {
   return (
     <header className="sticky top-0 z-50 w-full bg-shop_dark_green shadow-sm">
-      {showTopBar}
+      {showTopBar && <TopBar />}
       <DesktopNav
         publicLinks={defaultPublicLinks}
         categories={categories}

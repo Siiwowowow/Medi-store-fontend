@@ -1,28 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
-
 import { 
-  
   Mail, 
   Phone, 
   MapPin, 
   Clock, 
-  ArrowRight,
-  Pill,
+  ChevronRight,
   Send,
-  Heart
+  Heart,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 import { IconBrandFacebook, IconBrandInstagram, IconBrandLinkedin, IconBrandTwitter, IconBrandYoutube } from "@tabler/icons-react";
 import { Logo } from "../Navbar";
 
 const socialLinks = [
-  { name: "Facebook", icon: IconBrandFacebook, href: "https://facebook.com", color: "#1877F2" },
-  { name: "Twitter", icon: IconBrandTwitter, href: "https://twitter.com", color: "#1DA1F2" },
-  { name: "Instagram", icon: IconBrandInstagram, href: "https://instagram.com", color: "#E4405F" },
-  { name: "LinkedIn", icon: IconBrandLinkedin, href: "https://linkedin.com", color: "#0A66C2" },
-  { name: "YouTube", icon: IconBrandYoutube, href: "https://youtube.com", color: "#FF0000" },
+  { name: "Facebook", icon: IconBrandFacebook, href: "https://facebook.com" },
+  { name: "Twitter", icon: IconBrandTwitter, href: "https://twitter.com" },
+  { name: "Instagram", icon: IconBrandInstagram, href: "https://instagram.com" },
+  { name: "LinkedIn", icon: IconBrandLinkedin, href: "https://linkedin.com" },
+  { name: "YouTube", icon: IconBrandYoutube, href: "https://youtube.com" },
 ];
 
 const quickLinks = [
@@ -32,23 +32,23 @@ const quickLinks = [
   { name: "FAQs", href: "/faq" },
   { name: "Privacy Policy", href: "/privacy" },
   { name: "Terms & Conditions", href: "/terms" },
-  { name: "Shipping Info", href: "/shipping" },
-  { name: "Return Policy", href: "/returns" },
 ];
 
 const customerLinks = [
   { name: "My Account", href: "/profile" },
   { name: "Order History", href: "/orders" },
   { name: "Wishlist", href: "/wishlist" },
-  { name: "Cart", href: "/cart" },
   { name: "Track Order", href: "/track-order" },
   { name: "Support", href: "/support" },
 ];
+
+const paymentMethods = ["Visa", "Mastercard", "Amex", "bKash", "Nagad", "Rocket"];
 
 export default function Footer() {
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [openMobileMenu, setOpenMobileMenu] = useState<string | null>(null);
   const currentYear = new Date().getFullYear();
 
   const handleSubscribe = async (e: React.FormEvent) => {
@@ -56,7 +56,6 @@ export default function Footer() {
     if (!email || !email.includes("@")) return;
     
     setIsLoading(true);
-    // Simulate API call
     setTimeout(() => {
       setIsSubscribed(true);
       setIsLoading(false);
@@ -65,182 +64,338 @@ export default function Footer() {
     }, 1000);
   };
 
+  const toggleMobileMenu = (menu: string) => {
+    setOpenMobileMenu(openMobileMenu === menu ? null : menu);
+  };
+
   return (
-    <footer className="bg-shop_dark_green text-white mt-auto">
-      
-
+    <footer className="bg-[#063c28] text-white mt-auto">
       {/* Main Footer */}
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-          
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-8 sm:py-10">
+        {/* Desktop Grid (hidden on mobile) */}
+        <div className="hidden lg:grid lg:grid-cols-4 gap-8">
           {/* Brand Column */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              
-              <Logo/>
-            </div>
-            <p className="text-sm text-white leading-relaxed">
-              Your trusted online medicine shop. We provide 100% genuine medicines with fast delivery and 24/7 support.
+          <div className="space-y-3">
+            <Logo />
+            <p className="text-xs text-white/70 leading-relaxed">
+              Trusted online pharmacy with 100% genuine medicines & fast delivery.
             </p>
-            
-            {/* Contact Info */}
-            <div className="space-y-2 pt-2">
-              <div className="flex items-center gap-3 text-sm">
-                <Phone className="w-4 h-4 text-shop_orange shrink-0" />
-                <a href="tel:+880123456789" className="text-white hover:text-white transition-colors">
-                  +880 1234 56789
-                </a>
-              </div>
-              <div className="flex items-center gap-3 text-sm">
-                <Mail className="w-4 h-4 text-shop_orange shrink-0" />
-                <a href="mailto:support@medistore.com" className="text-white hover:text-white transition-colors">
-                  support@medistore.com
-                </a>
-              </div>
-              <div className="flex items-center gap-3 text-sm">
-                <MapPin className="w-4 h-4 text-shop_orange shrink-0" />
-                <span className="text-white">Dhaka, Bangladesh</span>
-              </div>
-              <div className="flex items-center gap-3 text-sm">
-                <Clock className="w-4 h-4 text-shop_orange shrink-0" />
-                <span className="text-white">Mon-Sat: 9AM - 9PM</span>
-              </div>
+            <div className="space-y-1.5">
+              <ContactItem icon={Phone} text="+880 1234 56789" href="tel:+880123456789" />
+              <ContactItem icon={Mail} text="support@medistore.com" href="mailto:support@medistore.com" />
+              <ContactItem icon={MapPin} text="Dhaka, Bangladesh" />
+              <ContactItem icon={Clock} text="Mon-Sat: 9AM - 9PM" />
             </div>
+            <SocialLinks />
+          </div>
 
-            {/* Social Media Icons */}
-            <div className="flex gap-3 pt-2">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group w-9 h-9 rounded-full bg-white/10 hover:bg-shop_orange flex items-center justify-center transition-all duration-300 hover:scale-110"
-                  aria-label={social.name}
-                >
-                  <social.icon className="w-4 h-4 text-white group-hover:text-white transition-colors" />
-                </a>
-              ))}
+          {/* Quick Links */}
+          <FooterColumn title="Quick Links" links={quickLinks} />
+          
+          {/* Customer Service */}
+          <FooterColumn title="Customer Service" links={customerLinks} />
+
+          {/* Newsletter & Payment */}
+          <NewsletterSection 
+            email={email}
+            setEmail={setEmail}
+            handleSubscribe={handleSubscribe}
+            isLoading={isLoading}
+            isSubscribed={isSubscribed}
+            paymentMethods={paymentMethods}
+          />
+        </div>
+
+        {/* Mobile Accordion Menu (visible on tablet/mobile) */}
+        <div className="lg:hidden">
+          {/* Brand & Social - Top Section */}
+          <div className="text-center mb-6 pb-6 border-b border-white/10">
+            <div className="flex justify-center mb-3">
+              <Logo />
             </div>
-          </div>
-
-          {/* Quick Links Column */}
-          <div>
-            <h3 className="text-white font-semibold text-lg mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              {quickLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-white hover:text-white hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-1 group"
-                  >
-                    <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all" />
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Customer Service Column */}
-          <div>
-            <h3 className="text-white font-semibold text-lg mb-4">Customer Service</h3>
-            <ul className="space-y-2">
-              {customerLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-white hover:text-white hover:translate-x-1 transition-all duration-200 inline-flex items-center gap-1 group"
-                  >
-                    <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all" />
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Newsletter & Payment Column */}
-          <div>
-            <h3 className="text-white font-semibold text-lg mb-4">Newsletter</h3>
-            <p className="text-sm text-white mb-3">
-              Subscribe to get special offers, free giveaways, and exclusive deals.
+            <p className="text-xs text-white/70 max-w-xs mx-auto">
+              Trusted online pharmacy with 100% genuine medicines & fast delivery.
             </p>
-            <form onSubmit={handleSubscribe} className="mb-6">
-              <div className="flex flex-col sm:flex-row gap-2">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Your email address"
-                  className="flex-1 px-4 py-2.5 rounded-xl bg-white border border-gray-300 text-gray-900 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-shop_orange focus:border-transparent transition-all"
-                  required
-                />
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="px-4 py-2.5 bg-shop_orange text-white rounded-xl text-sm font-medium hover:bg-[#e05e06] transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2"
-                >
-                  {isLoading ? (
-                    "Sending..."
-                  ) : isSubscribed ? (
-                    <>
-                      <Send className="w-3.5 h-3.5" />
-                      Subscribed!
-                    </>
-                  ) : (
-                    <>
-                      Subscribe
-                      <Send className="w-3.5 h-3.5" />
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
+            <div className="flex justify-center mt-4">
+              <SocialLinks />
+            </div>
+          </div>
 
-            {/* Payment Methods */}
-            <div>
-              <h3 className="text-white font-semibold text-base mb-3">We Accept</h3>
-              <div className="flex flex-wrap gap-2">
-                <span className="px-3 py-1.5 bg-white/10 rounded-lg text-xs font-medium text-white">Visa</span>
-                <span className="px-3 py-1.5 bg-white/10 rounded-lg text-xs font-medium text-white">Mastercard</span>
-                <span className="px-3 py-1.5 bg-white/10 rounded-lg text-xs font-medium text-white">Amex</span>
-                <span className="px-3 py-1.5 bg-white/10 rounded-lg text-xs font-medium text-white">bKash</span>
-                <span className="px-3 py-1.5 bg-white/10 rounded-lg text-xs font-medium text-white">Nagad</span>
-                <span className="px-3 py-1.5 bg-white/10 rounded-lg text-xs font-medium text-white">Rocket</span>
+          {/* Accordion Menus */}
+          <div className="space-y-2">
+            <MobileAccordion 
+              title="Quick Links" 
+              links={quickLinks}
+              isOpen={openMobileMenu === "quick"}
+              onToggle={() => toggleMobileMenu("quick")}
+            />
+            <MobileAccordion 
+              title="Customer Service" 
+              links={customerLinks}
+              isOpen={openMobileMenu === "customer"}
+              onToggle={() => toggleMobileMenu("customer")}
+            />
+          </div>
+
+          {/* Contact Info & Newsletter Combined */}
+          <div className="mt-6 pt-4 border-t border-white/10">
+            <div className="space-y-3 mb-4">
+              <h3 className="text-sm font-semibold text-white">Contact Info</h3>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <ContactItemSmall icon={Phone} text="+880 1234 56789" />
+                <ContactItemSmall icon={Mail} text="support@medistore.com" />
+                <ContactItemSmall icon={MapPin} text="Dhaka, Bangladesh" />
+                <ContactItemSmall icon={Clock} text="Mon-Sat: 9AM-9PM" />
               </div>
             </div>
+
+            <NewsletterSection 
+              email={email}
+              setEmail={setEmail}
+              handleSubscribe={handleSubscribe}
+              isLoading={isLoading}
+              isSubscribed={isSubscribed}
+              paymentMethods={paymentMethods}
+              compact
+            />
           </div>
         </div>
       </div>
 
       {/* Bottom Bar */}
       <div className="border-t border-white/10">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-8 py-6">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
-            <p className="text-xs text-white">
-              &copy; {currentYear} MediStore. All rights reserved.
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-4">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 text-center sm:text-left">
+            <p className="text-[11px] text-white/60">
+              © {currentYear} MediStore. All rights reserved.
             </p>
-            <div className="flex flex-wrap justify-center gap-4 text-xs">
-              <Link href="/privacy" className="text-white hover:text-white transition-colors">
-                Privacy Policy
-              </Link>
-              <span className="text-white">|</span>
-              <Link href="/terms" className="text-white hover:text-white transition-colors">
-                Terms of Service
-              </Link>
-              <span className="text-white">|</span>
-              <Link href="/cookies" className="text-white hover:text-white transition-colors">
-                Cookie Policy
-              </Link>
+            <div className="flex flex-wrap justify-center gap-3 text-[11px]">
+              <Link href="/privacy" className="text-white/60 hover:text-white transition">Privacy</Link>
+              <span className="text-white/30">|</span>
+              <Link href="/terms" className="text-white/60 hover:text-white transition">Terms</Link>
+              <span className="text-white/30">|</span>
+              <Link href="/cookies" className="text-white/60 hover:text-white transition">Cookies</Link>
             </div>
-            <div className="flex items-center gap-1 text-xs text-white">
-              <Heart className="w-3 h-3 text-shop_orange" />
+            <div className="flex items-center gap-1 text-[11px] text-white/60">
+              <Heart className="w-2.5 h-2.5 text-[#fb6c08]" />
               <span>Made with care</span>
             </div>
           </div>
         </div>
       </div>
     </footer>
+  );
+}
+
+// Reusable Components
+function ContactItem({ icon: Icon, text, href }: { icon: any; text: string; href?: string }) {
+  const content = (
+    <>
+      <Icon className="w-3.5 h-3.5 text-[#fb6c08] shrink-0" />
+      <span className="text-xs text-white/80">{text}</span>
+    </>
+  );
+  
+  if (href) {
+    return (
+      <a href={href} className="flex items-center gap-2 hover:opacity-80 transition">
+        {content}
+      </a>
+    );
+  }
+  
+  return <div className="flex items-center gap-2">{content}</div>;
+}
+
+function ContactItemSmall({ icon: Icon, text }: { icon: any; text: string }) {
+  return (
+    <div className="flex items-center gap-1.5">
+      <Icon className="w-3 h-3 text-[#fb6c08] shrink-0" />
+      <span className="text-[11px] text-white/70 truncate">{text}</span>
+    </div>
+  );
+}
+
+function SocialLinks() {
+  return (
+    <div className="flex gap-2">
+      {socialLinks.map((social) => (
+        <a
+          key={social.name}
+          href={social.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-7 h-7 rounded-lg bg-white/10 hover:bg-[#fb6c08] flex items-center justify-center transition-all duration-200 hover:scale-105"
+          aria-label={social.name}
+        >
+          <social.icon className="w-3.5 h-3.5 text-white" />
+        </a>
+      ))}
+    </div>
+  );
+}
+
+function FooterColumn({ title, links }: { title: string; links: typeof quickLinks }) {
+  return (
+    <div>
+      <h3 className="text-sm font-semibold text-white mb-3">{title}</h3>
+      <ul className="space-y-1.5">
+        {links.map((link) => (
+          <li key={link.href}>
+            <Link
+              href={link.href}
+              className="text-xs text-white/70 hover:text-white hover:pl-1 transition-all duration-200 inline-flex items-center gap-1 group"
+            >
+              <ChevronRight className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-all" />
+              {link.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function MobileAccordion({ title, links, isOpen, onToggle }: { 
+  title: string; 
+  links: typeof quickLinks; 
+  isOpen: boolean; 
+  onToggle: () => void;
+}) {
+  return (
+    <div className="border-b border-white/10">
+      <button
+        onClick={onToggle}
+        className="w-full flex justify-between items-center py-3 text-left"
+      >
+        <span className="text-sm font-semibold text-white">{title}</span>
+        {isOpen ? (
+          <ChevronUp className="w-4 h-4 text-white/60" />
+        ) : (
+          <ChevronDown className="w-4 h-4 text-white/60" />
+        )}
+      </button>
+      {isOpen && (
+        <div className="pb-3">
+          <ul className="space-y-1.5">
+            {links.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className="text-xs text-white/70 hover:text-white block py-0.5"
+                >
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function NewsletterSection({ 
+  email, 
+  setEmail, 
+  handleSubscribe, 
+  isLoading, 
+  isSubscribed,
+  paymentMethods,
+  compact = false
+}: { 
+  email: string;
+  setEmail: (email: string) => void;
+  handleSubscribe: (e: React.FormEvent) => void;
+  isLoading: boolean;
+  isSubscribed: boolean;
+  paymentMethods: string[];
+  compact?: boolean;
+}) {
+  if (compact) {
+    return (
+      <div>
+        <h3 className="text-sm font-semibold text-white mb-2">Newsletter</h3>
+        <form onSubmit={handleSubscribe} className="mb-3">
+          <div className="flex gap-1.5">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Your email"
+              className="flex-1 px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-[#fb6c08]"
+              required
+            />
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="px-3 py-1.5 bg-[#fb6c08] text-white rounded-lg text-xs font-medium hover:bg-[#e05e06] transition-all disabled:opacity-50"
+            >
+              {isLoading ? "..." : isSubscribed ? "✓" : "Sub"}
+            </button>
+          </div>
+        </form>
+        <div>
+          <p className="text-[11px] text-white/50 mb-1.5">We Accept</p>
+          <div className="flex flex-wrap gap-1.5">
+            {paymentMethods.slice(0, 4).map((method) => (
+              <span key={method} className="px-2 py-0.5 bg-white/10 rounded text-[10px] text-white/80">
+                {method}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <h3 className="text-sm font-semibold text-white mb-3">Newsletter</h3>
+      <p className="text-xs text-white/70 mb-3">
+        Get special offers & exclusive deals.
+      </p>
+      <form onSubmit={handleSubscribe} className="mb-4">
+        <div className="flex gap-2">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Your email"
+            className="flex-1 px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-[#fb6c08]"
+            required
+          />
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="px-4 py-2 bg-[#fb6c08] text-white rounded-lg text-sm font-medium hover:bg-[#e05e06] transition-all disabled:opacity-50 flex items-center gap-1"
+          >
+            {isLoading ? (
+              "..."
+            ) : isSubscribed ? (
+              <>
+                <Send className="w-3 h-3" />
+                Done
+              </>
+            ) : (
+              <>
+                <Send className="w-3 h-3" />
+                Sub
+              </>
+            )}
+          </button>
+        </div>
+      </form>
+      <div>
+        <h3 className="text-xs font-semibold text-white mb-2">We Accept</h3>
+        <div className="flex flex-wrap gap-1.5">
+          {paymentMethods.map((method) => (
+            <span key={method} className="px-2.5 py-1 bg-white/10 rounded text-[10px] text-white/80 font-medium">
+              {method}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

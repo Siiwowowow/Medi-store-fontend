@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// src/services/medicine.service.ts
-
 import { httpClient } from "@/lib/axios/httpClient";
+import { ApiResponse } from "@/types/api.types";
 
 export interface Medicine {
   id: string;
@@ -20,58 +19,56 @@ export interface Medicine {
   };
   avgRating?: number;
   reviewCount?: number;
-  isNew?: boolean;
-  isBestSeller?: boolean;
-  discount?: number;
 }
 
-export interface ProductsResponse {
-  success: boolean;
-  message: string;
-  data: Medicine[];
-  meta: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
-}
+export type ProductsResponse = ApiResponse<Medicine[]>;
 
 export const medicineService = {
-  // ✅ FIXED: getAllMedicines with correct params
   getAllMedicines: async (params: {
-    searchTerm?: string;
+    search?: string;
     categoryId?: string;
     manufacturer?: string;
     minPrice?: number;
     maxPrice?: number;
+    minStock?: number;
+    stock?: number;
     page?: number;
     limit?: number;
     sortBy?: string;
     sortOrder?: string;
-    sort?: string;
   }): Promise<ProductsResponse> => {
     try {
       const queryParams: Record<string, any> = {};
 
-      if (params.searchTerm) queryParams.searchTerm = params.searchTerm;
+      // ✅ Core params
+      queryParams.page = params.page || 1;
+      queryParams.limit = params.limit || 12;
+
+      // ✅ SEARCH
+      if (params.search && params.search.trim() !== "") {
+        queryParams.search = params.search.trim();
+      }
+
+      // ✅ Filters
       if (params.categoryId) queryParams.categoryId = params.categoryId;
       if (params.manufacturer) queryParams.manufacturer = params.manufacturer;
       if (params.minPrice && params.minPrice > 0) queryParams.minPrice = params.minPrice;
       if (params.maxPrice && params.maxPrice < 10000) queryParams.maxPrice = params.maxPrice;
-      if (params.page) queryParams.page = params.page;
-      if (params.limit) queryParams.limit = params.limit;
+      if (params.minStock !== undefined) queryParams.minStock = params.minStock;
+      if (params.stock !== undefined) queryParams.stock = params.stock;
+
+      // ✅ Sorting
       if (params.sortBy) queryParams.sortBy = params.sortBy;
       if (params.sortOrder) queryParams.sortOrder = params.sortOrder;
-      if (params.sort) queryParams.sort = params.sort;
 
+      // We expect httpClient.get<Medicine[]> to return ApiResponse<Medicine[]>
+      // which matches our ProductsResponse type.
       const response = await httpClient.get<Medicine[]>("/medicines", {
         params: queryParams,
       });
 
-      if (response?.success) {
-        return response as ProductsResponse;
-      }
+      if (response?.success) return response;
+
       return {
         success: false,
         message: "Failed to fetch medicines",
@@ -79,7 +76,7 @@ export const medicineService = {
         meta: { page: 1, limit: 12, total: 0, totalPages: 0 },
       };
     } catch (error) {
-      console.error("Error fetching medicines:", error);
+      console.error("❌ API ERROR:", error);
       return {
         success: false,
         message: "Error fetching medicines",
@@ -89,6 +86,27 @@ export const medicineService = {
     }
   },
 
+  getManufacturers: async (): Promise<string[]> => {
+    try {
+      // httpClient.get<string[]> returns ApiResponse<string[]>
+      const response = await httpClient.get<string[]>("/medicines/manufacturers");
+      return response?.data || [];
+    } catch (error) {
+      console.error("Error fetching manufacturers:", error);
+      return [];
+    }
+  },
+
+  getMedicineById: async (id: string): Promise<Medicine | null> => {
+    try {
+      // httpClient.get<Medicine> returns ApiResponse<Medicine>
+      const response = await httpClient.get<Medicine>(`/medicines/${id}`);
+      return response?.data || null;
+    } catch (error) {
+      console.error("Error fetching medicine by id:", error);
+      return null;
+    }
+  },
   getBestSelling: async (params?: { limit?: number }): Promise<Medicine[]> => {
     try {
       const response = await httpClient.get<Medicine[]>("/medicines", {
@@ -103,19 +121,6 @@ export const medicineService = {
       return [];
     } catch (error) {
       console.error("Error fetching best selling medicines:", error);
-      return [];
-    }
-  },
-
-  getManufacturers: async (): Promise<string[]> => {
-    try {
-      const response = await httpClient.get<string[]>("/medicines/manufacturers");
-      if (response?.success && Array.isArray(response?.data)) {
-        return response.data;
-      }
-      return [];
-    } catch (error) {
-      console.error("Error fetching manufacturers:", error);
       return [];
     }
   },
