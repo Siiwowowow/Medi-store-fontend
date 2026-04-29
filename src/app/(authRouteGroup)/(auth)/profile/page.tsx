@@ -83,7 +83,7 @@ export default function ProfilePage() {
           <div className="flex flex-col items-center gap-4">
             {/* Avatar with upload overlay */}
             <div className="relative group">
-              <Avatar size="lg" className="!size-28 text-2xl">
+              <Avatar size="lg" className="size-28! text-2xl">
                 <AvatarImage
                   src={user?.image || ""}
                   alt={user?.name || "User"}

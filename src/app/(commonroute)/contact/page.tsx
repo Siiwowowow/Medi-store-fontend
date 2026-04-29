@@ -107,7 +107,7 @@ export default function ContactPage() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-[#f6f6f6]">
+      <div className="min-h-screen bg-shop_light_bg">
         <HeroSection />
         <div className="max-w-[1280px] mx-auto px-8 py-16">
           <div className="grid grid-cols-[380px_1fr] gap-8 max-lg:grid-cols-1">
@@ -120,7 +120,7 @@ export default function ContactPage() {
                 <h2 className="text-[22px] font-extrabold text-[#151515] mt-5" style={{ letterSpacing: '-0.015em' }}>
                   Message Sent!
                 </h2>
-                <p className="text-sm text-[#52525b] mt-2 max-w-[320px]">
+                <p className="text-sm text-lightColor mt-2 max-w-[320px]">
                   Thank you for reaching out. Our team will reply to your email within 2 hours.
                 </p>
                 <p className="text-xs text-[#9ca3af] mt-3 font-mono">
@@ -439,7 +439,7 @@ function ContactInfo() {
             { Icon: IconBrandYoutube, platform: "YouTube", handle: "@medistorebd" }
           ].map((social, idx) => (
             <Link key={idx} href="#" className="flex items-center gap-3 hover:opacity-80 transition">
-              <social.Icon className="w-5 h-5 text-[#fb6c08]" />
+              <social.Icon className="w-5 h-5 text-shop_orange" />
               <span className="text-sm font-semibold text-white">{social.platform}</span>
               <span className="text-xs text-white/50">{social.handle}</span>
             </Link>
@@ -448,25 +448,25 @@ function ContactInfo() {
       </div>
 
       {/* Card 3: Business Hours */}
-      <div className="bg-white border-[1.5px] border-[#e5e7eb] rounded-xl p-6">
-        <h3 className="text-base font-bold text-[#151515] mb-4">Business Hours</h3>
+      <div className="bg-white border-[1.5px] border-shop_light_bg rounded-xl p-6">
+        <h3 className="text-base font-bold text-darkColor mb-4">Business Hours</h3>
         <div className="space-y-2">
-          <div className="flex justify-between py-2 border-b border-[#f6f6f6]">
-            <span className="text-[13px] text-[#52525b] font-medium">Saturday – Thursday</span>
-            <span className="text-[13px] text-[#151515] font-semibold">9:00 AM – 10:00 PM</span>
+          <div className="flex justify-between py-2 border-b border-shop_light_bg">
+            <span className="text-[13px] text-lightColor font-medium">Saturday – Thursday</span>
+            <span className="text-[13px] text-darkColor font-semibold">9:00 AM – 10:00 PM</span>
           </div>
           <div className="flex justify-between py-2 border-b border-[#f6f6f6]">
-            <span className="text-[13px] text-[#52525b] font-medium">Friday</span>
-            <span className="text-[13px] text-[#151515] font-semibold">2:00 PM – 10:00 PM</span>
+            <span className="text-[13px] text-lightColor font-medium">Friday</span>
+            <span className="text-[13px] text-darkColor font-semibold">2:00 PM – 10:00 PM</span>
           </div>
           <div className="flex justify-between py-2">
-            <span className="text-[13px] text-[#52525b] font-medium">Holidays</span>
-            <span className="text-[13px] text-[#151515] font-semibold">Emergency only</span>
+            <span className="text-[13px] text-lightColor font-medium">Holidays</span>
+            <span className="text-[13px] text-darkColor font-semibold">Emergency only</span>
           </div>
         </div>
-        <div className="mt-4 pt-3 border-t border-[#f6f6f6] flex items-center gap-2">
-          <div className="w-2 h-2 bg-[#3b9c3c] rounded-full animate-pulse" />
-          <span className="text-sm font-semibold text-[#3b9c3c]">We're currently open</span>
+        <div className="mt-4 pt-3 border-t border-shop_light_bg flex items-center gap-2">
+          <div className="w-2 h-2 bg-shop_light_green rounded-full animate-pulse" />
+          <span className="text-sm font-semibold text-shop_light_green">We're currently open</span>
         </div>
       </div>
     </div>
@@ -498,9 +498,9 @@ function MapSection() {
 
       {/* Info Card */}
       <div className="absolute bottom-4 left-4 bg-white rounded-xl shadow-sm border border-[#e5e7eb] px-5 py-4 max-w-[260px]">
-        <h4 className="text-sm font-bold text-[#151515]">MediStore Head Office</h4>
+        <h4 className="text-sm font-bold text-darkColor">MediStore Head Office</h4>
         <p className="text-xs text-[#9ca3af] mt-0.5">House 12, Road 4, Banani, Dhaka</p>
-        <Link href="#" className="text-[#fb6c08] text-xs font-semibold mt-2 inline-block">
+        <Link href="#" className="text-shop_orange text-xs font-semibold mt-2 inline-block">
           Get Directions →
         </Link>
       </div>
@@ -542,8 +542,8 @@ function FaqSection({ faqs, openFaqs, toggleFaq }: {
                 </div>
               </div>
               {openFaqs.includes(index) && (
-                <div className="mt-3 pt-3 border-t border-[#f6f6f6]">
-                  <p className="text-[13px] text-[#52525b] leading-relaxed">{faq.a}</p>
+                <div className="mt-3 pt-3 border-t border-shop_light_bg">
+                  <p className="text-[13px] text-lightColor leading-relaxed">{faq.a}</p>
                 </div>
               )}
             </div>

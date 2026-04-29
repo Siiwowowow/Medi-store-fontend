@@ -12,7 +12,7 @@ import {
   ChevronRight,
   Star,
   Sparkles,
-  CheckCircle
+ 
 } from "lucide-react";
 
 // Slide Data
@@ -91,7 +91,7 @@ export default function HeroSection() {
   const current = slides[currentSlide];
 
   return (
-    <section className="relative bg-[#063c28] overflow-hidden">
+    <section className="relative bg-shop_dark_green overflow-hidden">
       {/* Industrial geometric pattern - no gradients */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-0 left-0 w-64 h-64 border-2 border-white/10 rounded-none" />
@@ -106,8 +106,8 @@ export default function HeroSection() {
           <div className="text-center lg:text-left">
             {/* Badge - Industrial style */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 border border-white/15 bg-white/5 rounded-[8px] mb-6">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#3b9c3c]" />
-              <current.badgeIcon className="w-3.5 h-3.5 text-[#fb6c08]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-shop_light_green" />
+              <current.badgeIcon className="w-3.5 h-3.5 text-shop_orange" />
               <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-white/70">
                 {current.badge}
               </span>
@@ -116,7 +116,7 @@ export default function HeroSection() {
             {/* Title - Bold industrial typography */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-[-0.03em] leading-[1.1] mb-4 text-white">
               {current.title}
-              <span className="block text-[#fb6c08]">
+              <span className="block text-shop_orange">
                 {current.highlight}
               </span>
             </h1>
@@ -164,13 +164,13 @@ export default function HeroSection() {
           {/* RIGHT SIDE - Product Showcase - Industrial card */}
           <div className="relative">
             {/* Discount Badge - Industrial style */}
-            <div className="absolute -top-3 -right-3 z-20 px-3 py-1.5 rounded-[8px] text-xs font-bold bg-[#fb6c08] text-white shadow-lg">
+            <div className="absolute -top-3 -right-3 z-20 px-3 py-1.5 rounded-[8px] text-xs font-bold bg-shop_orange text-white shadow-lg">
               {current.discount}
             </div>
 
             {/* Carousel Container - No shadows, just border */}
             <div className="relative rounded-[12px] border-[1.5px] border-white/10 bg-white/5 overflow-hidden">
-              <div className="relative aspect-[4/3]">
+              <div className="relative aspect-4/3">
                 <img
                   src={current.image}
                   alt={current.productName}
@@ -178,7 +178,7 @@ export default function HeroSection() {
                 />
                 
                 {/* Product Name Overlay - Industrial */}
-                <div className="absolute bottom-3 left-3 bg-[#063c28]/90 backdrop-blur-sm border border-white/10 px-3 py-1.5 rounded-[8px]">
+                <div className="absolute bottom-3 left-3 bg-shop_dark_green/90 backdrop-blur-sm border border-white/10 px-3 py-1.5 rounded-[8px]">
                   <p className="text-xs font-semibold text-white/90">{current.productName}</p>
                 </div>
                 
@@ -206,14 +206,14 @@ export default function HeroSection() {
             {/* Navigation Buttons - Industrial */}
             <button
               onClick={prevSlide}
-              className="absolute -left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-[8px] bg-[#063c28] border border-white/20 flex items-center justify-center transition-all duration-200 hover:border-white/40 hover:bg-white/5 z-10"
+              className="absolute -left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-[8px] bg-shop_dark_green border border-white/20 flex items-center justify-center transition-all duration-200 hover:border-white/40 hover:bg-white/5 z-10"
               aria-label="Previous slide"
             >
               <ChevronLeft className="w-4 h-4 text-white" />
             </button>
             <button
               onClick={nextSlide}
-              className="absolute -right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-[8px] bg-[#063c28] border border-white/20 flex items-center justify-center transition-all duration-200 hover:border-white/40 hover:bg-white/5 z-10"
+              className="absolute -right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-[8px] bg-shop_dark_green border border-white/20 flex items-center justify-center transition-all duration-200 hover:border-white/40 hover:bg-white/5 z-10"
               aria-label="Next slide"
             >
               <ChevronRight className="w-4 h-4 text-white" />
@@ -223,7 +223,7 @@ export default function HeroSection() {
       </div>
 
       {/* Industrial bottom line */}
-      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#fb6c08]/50 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-linear-to-r from-transparent via-shop_orange/50 to-transparent" />
     </section>
   );
 }

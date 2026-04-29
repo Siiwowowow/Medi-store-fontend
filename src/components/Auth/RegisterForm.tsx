@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -10,7 +11,7 @@ import { toast } from "sonner";
 import { registerAction } from "@/app/(authRouteGroup)/(auth)/register/_action";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import Image from "next/image";
+
 import { Camera, X, Eye, EyeOff, User, Mail, Lock, Store, Phone, MapPin, Building, ShoppingBag, Truck, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SocialLogin from "../shared/socialLogin/socialLogin";
@@ -124,12 +125,12 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6 bg-gradient-to-br from-brand-soft/30 via-white to-brand-soft/20">
+    <div className="min-h-screen w-full flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6 bg-linear-to-br from-brand-soft/30 via-white to-brand-soft/20">
       <Card className="w-full max-w-lg mx-auto shadow-2xl border-0 rounded-2xl overflow-hidden">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand via-brand-light to-brand" />
+        <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-brand via-brand-light to-brand" />
         
         <CardHeader className="text-center pt-8 pb-4">
-          <div className="mx-auto w-14 h-14 bg-gradient-to-br from-brand to-brand-light rounded-2xl flex items-center justify-center shadow-lg mb-4">
+          <div className="mx-auto w-14 h-14 bg-linear-to-br from-brand to-brand-light rounded-2xl flex items-center justify-center shadow-lg mb-4">
             {role === "SELLER" ? (
               <Store className="w-7 h-7 text-blue-600" />
             ) : (

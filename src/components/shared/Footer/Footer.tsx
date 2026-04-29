@@ -69,7 +69,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#063c28] text-white mt-auto">
+    <footer className="bg-shop_dark_green text-white mt-auto">
       {/* Main Footer */}
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-8 sm:py-10">
         {/* Desktop Grid (hidden on mobile) */}
@@ -177,7 +177,7 @@ export default function Footer() {
               <Link href="/cookies" className="text-white/60 hover:text-white transition">Cookies</Link>
             </div>
             <div className="flex items-center gap-1 text-[11px] text-white/60">
-              <Heart className="w-2.5 h-2.5 text-[#fb6c08]" />
+              <Heart className="w-2.5 h-2.5 text-shop_orange" />
               <span>Made with care</span>
             </div>
           </div>
@@ -191,7 +191,7 @@ export default function Footer() {
 function ContactItem({ icon: Icon, text, href }: { icon: any; text: string; href?: string }) {
   const content = (
     <>
-      <Icon className="w-3.5 h-3.5 text-[#fb6c08] shrink-0" />
+      <Icon className="w-3.5 h-3.5 text-shop_orange shrink-0" />
       <span className="text-xs text-white/80">{text}</span>
     </>
   );
@@ -210,7 +210,7 @@ function ContactItem({ icon: Icon, text, href }: { icon: any; text: string; href
 function ContactItemSmall({ icon: Icon, text }: { icon: any; text: string }) {
   return (
     <div className="flex items-center gap-1.5">
-      <Icon className="w-3 h-3 text-[#fb6c08] shrink-0" />
+      <Icon className="w-3 h-3 text-shop_orange shrink-0" />
       <span className="text-[11px] text-white/70 truncate">{text}</span>
     </div>
   );
@@ -225,7 +225,7 @@ function SocialLinks() {
           href={social.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-7 h-7 rounded-lg bg-white/10 hover:bg-[#fb6c08] flex items-center justify-center transition-all duration-200 hover:scale-105"
+          className="w-7 h-7 rounded-lg bg-white/10 hover:bg-shop_orange flex items-center justify-center transition-all duration-200 hover:scale-105"
           aria-label={social.name}
         >
           <social.icon className="w-3.5 h-3.5 text-white" />
@@ -323,13 +323,13 @@ function NewsletterSection({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Your email"
-              className="flex-1 px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-[#fb6c08]"
+              className="flex-1 px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-shop_orange"
               required
             />
             <button
               type="submit"
               disabled={isLoading}
-              className="px-3 py-1.5 bg-[#fb6c08] text-white rounded-lg text-xs font-medium hover:bg-[#e05e06] transition-all disabled:opacity-50"
+              className="px-3 py-1.5 bg-shop_orange text-white rounded-lg text-xs font-medium hover:bg-[#e05e06] transition-all disabled:opacity-50"
             >
               {isLoading ? "..." : isSubscribed ? "✓" : "Sub"}
             </button>
@@ -362,13 +362,13 @@ function NewsletterSection({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Your email"
-            className="flex-1 px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-[#fb6c08]"
+            className="flex-1 px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-shop_orange"
             required
           />
           <button
             type="submit"
             disabled={isLoading}
-            className="px-4 py-2 bg-[#fb6c08] text-white rounded-lg text-sm font-medium hover:bg-[#e05e06] transition-all disabled:opacity-50 flex items-center gap-1"
+            className="px-4 py-2 bg-shop_orange text-white rounded-lg text-sm font-medium hover:bg-[#e05e06] transition-all disabled:opacity-50 flex items-center gap-1"
           >
             {isLoading ? (
               "..."
