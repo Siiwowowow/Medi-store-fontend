@@ -22,9 +22,18 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
-    // ✅ Add qualities configuration
     qualities: [25, 50, 75, 80, 90],
   },
+  // 👇👇👇 ADD THIS REWRITES CONFIGURATION 👇👇👇
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:5000/api/:path*',
+      },
+    ];
+  },
+  // 👆👆👆 END OF REWRITES 👆👆👆
 };
 
 export default nextConfig;

@@ -5,6 +5,7 @@ import MobileNav from "./MobileNav";
 import TopBar from "./TopBar";
 import type { NavbarProps } from "./types";
 import { Home, Info, Phone, Pill } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 const defaultPublicLinks = [
   { label: "Home",    href: "/",        icon: Home },
@@ -62,6 +63,16 @@ const defaultCategories = [
 ];
 
 export default function Navbar({ categories = defaultCategories, showTopBar = true }: NavbarProps) {
+  const pathname = usePathname();
+
+  // Hide Navbar on dashboard pages
+  const isDashboard = pathname?.startsWith("/admin") || 
+                      pathname?.startsWith("/user") || 
+                      pathname?.startsWith("/seller");
+
+  if (isDashboard) {
+    return null;
+  }
   return (
     <header className="sticky top-0 z-50 w-full bg-shop_dark_green shadow-sm">
       {showTopBar && <TopBar />}

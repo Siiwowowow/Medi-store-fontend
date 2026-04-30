@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { 
   Mail, 
   Phone, 
@@ -45,11 +46,21 @@ const customerLinks = [
 const paymentMethods = ["Visa", "Mastercard", "Amex", "bKash", "Nagad", "Rocket"];
 
 export default function Footer() {
+  const pathname = usePathname();
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [openMobileMenu, setOpenMobileMenu] = useState<string | null>(null);
   const currentYear = new Date().getFullYear();
+
+  // Hide footer on dashboard pages
+  const isDashboard = pathname?.startsWith("/admin") || 
+                      pathname?.startsWith("/user") || 
+                      pathname?.startsWith("/seller");
+
+  if (isDashboard) {
+    return null;
+  }
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();

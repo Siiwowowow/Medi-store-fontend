@@ -184,7 +184,7 @@ export default function ShopPage() {
   const handleApplyFilters = useCallback(() => setMobileFilterOpen(false), []);
 
   return (
-    <div className="bg-[#f6f6f6] min-h-screen">
+    <div className="bg-shop_light_bg min-h-screen">
      
 
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-6">

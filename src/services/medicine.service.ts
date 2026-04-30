@@ -111,7 +111,8 @@ export const medicineService = {
     try {
       const response = await httpClient.get<Medicine[]>("/medicines", {
         params: {
-          sort: "bestselling",
+          sortBy: "orderCount",
+          sortOrder: "desc",
           limit: params?.limit || 4,
         },
       });

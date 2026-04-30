@@ -8,6 +8,7 @@ import {
   IconLogs,
   IconUserCircle,
   IconLogout,
+  IconHome,
 } from "@tabler/icons-react"
 
 import {
@@ -94,6 +95,12 @@ export function AdminSidebar() {
                 <span className="text-xs text-muted-foreground truncate">{user?.email}</span>
               </div>
             </div>
+            <SidebarMenuButton asChild className="text-primary hover:text-primary hover:bg-primary/10 mb-2">
+              <Link href="/">
+                <IconHome size={20} />
+                <span>Go to Home</span>
+              </Link>
+            </SidebarMenuButton>
             <SidebarMenuButton onClick={logout} className="text-destructive hover:text-destructive hover:bg-destructive/10">
               <IconLogout />
               <span>Log out</span>
