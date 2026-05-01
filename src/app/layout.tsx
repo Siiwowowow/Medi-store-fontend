@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import QueryProviders from "@/providers/QueryProvider";
@@ -8,16 +7,7 @@ import Navbar from "@/components/shared/Navbar/Navbar";
 import { Toaster } from "sonner";
 import { getUserInfo } from "@/services/auth.services";
 import Footer from "@/components/shared/Footer/Footer";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { ToastProvider } from "@/providers/ToastProvider";
 
 export const metadata: Metadata = {
   title: "MediStore",
@@ -41,6 +31,7 @@ export default async function RootLayout({
               <main>
                 {children}
                 <Toaster richColors position="top-right" />
+                <ToastProvider />
               </main>
               <Footer />
             </TooltipProvider>
