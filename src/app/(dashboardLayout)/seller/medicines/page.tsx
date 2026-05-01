@@ -67,7 +67,7 @@ export default function MedicinesPage() {
         </div>
         <Link
           href="/seller/medicines/add"
-          className="bg-[#fb6c08] text-white h-10 px-5 rounded-xl font-semibold text-sm flex items-center gap-2 hover:bg-[#e05d00] transition-colors"
+          className="bg-shop_orange text-white h-10 px-5 rounded-xl font-semibold text-sm flex items-center gap-2 hover:bg-[#e05d00] transition-colors"
         >
           <PlusCircle className="w-4 h-4" />
           Add Medicine

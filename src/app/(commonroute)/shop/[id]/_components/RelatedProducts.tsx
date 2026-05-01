@@ -36,7 +36,7 @@ function RelatedProductCard({ product }: { product: Medicine }) {
           </div>
         )}
         {discount > 0 && !isOutOfStock && (
-          <span className="absolute top-2 left-2 bg-[#fb6c08] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
+          <span className="absolute top-2 left-2 bg-shop_orange text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
             {discount}% OFF
           </span>
         )}
@@ -51,7 +51,7 @@ function RelatedProductCard({ product }: { product: Medicine }) {
 
         {/* Name */}
         <Link href={`/shop/${product.id}`}>
-          <h3 className="text-sm font-semibold text-gray-800 line-clamp-1 mt-1 hover:text-[#063c28] transition">
+          <h3 className="text-sm font-semibold text-gray-800 line-clamp-1 mt-1 hover:text-shop_dark_green transition">
             {product.name}
           </h3>
         </Link>
@@ -73,7 +73,7 @@ function RelatedProductCard({ product }: { product: Medicine }) {
 
         {/* Price */}
         <div className="mt-2 flex items-center gap-2">
-          <span className="text-sm font-bold text-[#063c28]">৳{product.price}</span>
+          <span className="text-sm font-bold text-shop_dark_green">৳{product.price}</span>
           {product.originalPrice && product.originalPrice > product.price && (
             <span className="text-[9px] line-through text-gray-400">৳{product.originalPrice}</span>
           )}
@@ -91,7 +91,7 @@ function RelatedProductCard({ product }: { product: Medicine }) {
         {/* Button */}
         <button
           disabled={isOutOfStock}
-          className="mt-2 w-full bg-[#fb6c08] hover:bg-[#e05e06] text-white text-[11px] font-semibold py-1.5 rounded-lg transition-all active:scale-[0.98] disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+          className="mt-2 w-full bg-shop_orange hover:bg-[#e05e06] text-white text-[11px] font-semibold py-1.5 rounded-lg transition-all active:scale-[0.98] disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
         >
           Add to Cart
         </button>
@@ -113,12 +113,12 @@ export default function RelatedProducts({ products, currentProductId }: RelatedP
       <div className="max-w-[1280px] mx-auto px-4 sm:px-8">
         <div className="flex items-end justify-between mb-8">
           <div>
-            <span className="text-[#3b9c3c] text-xs font-bold uppercase tracking-wider">You May Also Like</span>
+            <span className="text-shop_light_green text-xs font-bold uppercase tracking-wider">You May Also Like</span>
             <h2 className="text-2xl font-bold text-gray-900">Related Products</h2>
           </div>
           <Link
             href="/shop"
-            className="text-sm text-[#063c28] hover:underline flex items-center gap-1"
+            className="text-sm text-shop_dark_green hover:underline flex items-center gap-1"
           >
             View All →
           </Link>

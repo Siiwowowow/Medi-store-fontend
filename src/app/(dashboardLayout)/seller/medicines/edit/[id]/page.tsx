@@ -106,7 +106,7 @@ export default function EditMedicinePage() {
       <div className="max-w-[800px] mx-auto">
         <div className="bg-white rounded-2xl border border-gray-100 p-8">
           <div className="flex items-center justify-center h-64">
-            <Loader2 className="w-8 h-8 animate-spin text-[#063c28]" />
+            <Loader2 className="w-8 h-8 animate-spin text-shop_dark_green" />
             <span className="ml-2 text-gray-600">Loading medicine data...</span>
           </div>
         </div>
@@ -144,7 +144,7 @@ export default function EditMedicinePage() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Medicine Image</label>
             <div
-              className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all hover:border-[#063c28]/50 hover:bg-[#fcf0e4]/30 ${imagePreview ? "border-green-300 bg-green-50/30" : "border-gray-200 bg-gray-50"}`}
+              className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all hover:border-shop_dark_green/50 hover:bg-shop_light_pink/30 ${imagePreview ? "border-green-300 bg-green-50/30" : "border-gray-200 bg-gray-50"}`}
               onClick={() => document.getElementById("image-upload")?.click()}
             >
               <input
@@ -188,7 +188,7 @@ export default function EditMedicinePage() {
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full h-10 border border-gray-200 rounded-lg px-3 text-sm focus:border-[#063c28] focus:ring-2 focus:ring-[#063c28]/10"
+                className="w-full h-10 border border-gray-200 rounded-lg px-3 text-sm focus:border-shop_dark_green focus:ring-2 focus:ring-shop_dark_green/10"
                 placeholder="e.g., Paracetamol 500mg"
               />
             </div>
@@ -199,7 +199,7 @@ export default function EditMedicinePage() {
                 type="text"
                 value={formData.genericName}
                 onChange={(e) => setFormData({ ...formData, genericName: e.target.value })}
-                className="w-full h-10 border border-gray-200 rounded-lg px-3 text-sm focus:border-[#063c28] focus:ring-2 focus:ring-[#063c28]/10"
+                className="w-full h-10 border border-gray-200 rounded-lg px-3 text-sm focus:border-shop_dark_green focus:ring-2 focus:ring-shop_dark_green/10"
                 placeholder="e.g., Acetaminophen"
               />
               <p className="text-[10px] text-gray-400 mt-1">Scientific/generic name of the medicine</p>
@@ -212,7 +212,7 @@ export default function EditMedicinePage() {
                 required
                 value={formData.manufacturer}
                 onChange={(e) => setFormData({ ...formData, manufacturer: e.target.value })}
-                className="w-full h-10 border border-gray-200 rounded-lg px-3 text-sm focus:border-[#063c28] focus:ring-2 focus:ring-[#063c28]/10"
+                className="w-full h-10 border border-gray-200 rounded-lg px-3 text-sm focus:border-shop_dark_green focus:ring-2 focus:ring-shop_dark_green/10"
                 placeholder="e.g., Square Pharmaceuticals Ltd."
               />
             </div>
@@ -243,7 +243,7 @@ export default function EditMedicinePage() {
                 step="0.01"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="w-full h-10 border border-gray-200 rounded-lg px-3 text-sm focus:border-[#063c28] focus:ring-2 focus:ring-[#063c28]/10"
+                className="w-full h-10 border border-gray-200 rounded-lg px-3 text-sm focus:border-shop_dark_green focus:ring-2 focus:ring-shop_dark_green/10"
                 placeholder="0.00"
               />
             </div>
@@ -256,7 +256,7 @@ export default function EditMedicinePage() {
                 min="0"
                 value={formData.stock}
                 onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                className="w-full h-10 border border-gray-200 rounded-lg px-3 text-sm focus:border-[#063c28] focus:ring-2 focus:ring-[#063c28]/10"
+                className="w-full h-10 border border-gray-200 rounded-lg px-3 text-sm focus:border-shop_dark_green focus:ring-2 focus:ring-shop_dark_green/10"
                 placeholder="0"
               />
               <p className="text-[10px] text-gray-400 mt-1">units (tablets/capsules/bottles)</p>
@@ -284,7 +284,7 @@ export default function EditMedicinePage() {
                 type="text"
                 value={formData.strength}
                 onChange={(e) => setFormData({ ...formData, strength: e.target.value })}
-                className="w-full h-10 border border-gray-200 rounded-lg px-3 text-sm focus:border-[#063c28] focus:ring-2 focus:ring-[#063c28]/10"
+                className="w-full h-10 border border-gray-200 rounded-lg px-3 text-sm focus:border-shop_dark_green focus:ring-2 focus:ring-shop_dark_green/10"
                 placeholder="e.g., 500mg, 10mg/5ml"
               />
             </div>
@@ -296,7 +296,7 @@ export default function EditMedicinePage() {
                 rows={4}
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:border-[#063c28] focus:ring-2 focus:ring-[#063c28]/10 resize-none"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:border-shop_dark_green focus:ring-2 focus:ring-shop_dark_green/10 resize-none"
                 placeholder="Describe the medicine, usage, and benefits..."
               />
             </div>
@@ -329,7 +329,7 @@ export default function EditMedicinePage() {
             <button
               type="submit"
               disabled={isPending}
-              className="h-11 px-8 rounded-xl bg-[#063d29] text-white font-semibold text-sm hover:bg-[#052e21] transition-colors disabled:opacity-50"
+              className="h-11 px-8 rounded-xl bg-shop_btn_dark_green text-white font-semibold text-sm hover:bg-[#052e21] transition-colors disabled:opacity-50"
             >
               {isPending ? (
                 <>

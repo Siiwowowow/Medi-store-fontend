@@ -48,8 +48,8 @@ export default function OrdersPage() {
           <button
             key={tab.value}
             onClick={() => setActiveStatus(tab.value)}
-            className={`flex-shrink-0 bg-white border rounded-xl px-5 py-3 flex items-center gap-3 transition-all ${
-              activeStatus === tab.value ? "border-[#063c28] bg-[#fcf0e4]" : "border-gray-200 hover:border-gray-300"
+            className={`shrink-0 bg-white border rounded-xl px-5 py-3 flex items-center gap-3 transition-all ${
+              activeStatus === tab.value ? "border-shop_dark_green bg-shop_light_pink" : "border-gray-200 hover:border-gray-300"
             }`}
           >
             <div className={`w-2 h-2 rounded-full bg-${tab.dot}-500`} />
@@ -115,7 +115,7 @@ export default function OrdersPage() {
                     <td className="text-sm text-gray-500 py-3.5 px-4">{formatTimeAgo(order.createdAt)}</td>
                     <td className="py-3.5 px-4"><StatusBadge status={order.status} /></td>
                     <td className="py-3.5 px-4">
-                      <button className="border border-[#063c28] text-[#063c28] rounded-lg px-3 py-1.5 text-xs font-medium flex items-center gap-1 hover:bg-[#063c28]/5 transition-colors">
+                      <button className="border border-shop_dark_green text-shop_dark_green rounded-lg px-3 py-1.5 text-xs font-medium flex items-center gap-1 hover:bg-shop_dark_green/5 transition-colors">
                         Update Status
                         <ChevronDown className="w-3 h-3" />
                       </button>
