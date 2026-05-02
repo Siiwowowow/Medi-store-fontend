@@ -25,14 +25,16 @@ export const deleteMedicine = async (id: string) => {
 
 export const createMedicine = async (data: FormData) => {
   const response = await httpClient.post("/medicines/seller", data, {
-    headers: { "Content-Type": "multipart/form-data" }
+    headers: { "Content-Type": "multipart/form-data" },
+    timeout: 120000, // 2 min — Cloudinary upload can be slow on first request
   });
   return response.data;
 };
 
 export const updateMedicine = async (id: string, data: FormData) => {
   const response = await httpClient.patch(`/medicines/seller/${id}`, data, {
-    headers: { "Content-Type": "multipart/form-data" }
+    headers: { "Content-Type": "multipart/form-data" },
+    timeout: 120000, // 2 min — Cloudinary upload can be slow on first request
   });
   return response.data;
 };

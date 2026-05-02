@@ -11,6 +11,7 @@ import FilterSidebar from "./_components/FilterSidebar";
 import MedicineGrid from "./_components/MedicineGrid";
 import Pagination from "./_components/Pagination";
 import MobileFilterDrawer from "./_components/MobileFilterDrawer";
+import CategoriesSection from "@/components/shared/Categories/CategoriesSection";
 import type { Medicine } from "@/services/medicine.service";
 import type { Category } from "@/services/category.service";
 
@@ -185,7 +186,6 @@ export default function ShopPage() {
 
   return (
     <div className="bg-shop_light_bg min-h-screen">
-     
 
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex gap-6">

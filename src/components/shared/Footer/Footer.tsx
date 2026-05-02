@@ -336,6 +336,7 @@ function NewsletterSection({
               placeholder="Your email"
               className="flex-1 px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-shop_orange"
               required
+              suppressHydrationWarning
             />
             <button
               type="submit"
@@ -375,6 +376,7 @@ function NewsletterSection({
             placeholder="Your email"
             className="flex-1 px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-shop_orange"
             required
+            suppressHydrationWarning
           />
           <button
             type="submit"

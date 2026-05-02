@@ -10,7 +10,7 @@ if(!API_BASE_URL) {
 
 const instance = axios.create({
     baseURL: API_BASE_URL,
-    timeout: 30000,
+    timeout: 30000, // Default 30s — uploads override this per-request
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
@@ -36,6 +36,7 @@ const axiosInstance = () => instance;
 export interface ApiRequestOptions {
     params?: Record<string, unknown>;
     headers?: Record<string, string>;
+    timeout?: number; // Per-request timeout override (ms)
 }
 
 // Make sure your httpClient.get is sending params correctly
@@ -57,6 +58,7 @@ const httpPost = async <TData>(endpoint: string, data: unknown, options?: ApiReq
         const response = await axiosInstance().post<ApiResponse<TData>>(endpoint, data, {
             params: options?.params,
             headers: options?.headers,
+            timeout: options?.timeout,
         });
         return response.data;
     } catch (error) {
@@ -83,6 +85,7 @@ const httpPatch = async <TData>(endpoint: string, data: unknown, options?: ApiRe
         const response = await axiosInstance().patch<ApiResponse<TData>>(endpoint, data, {
             params: options?.params,
             headers: options?.headers,
+            timeout: options?.timeout,
         });
         return response.data;
     }

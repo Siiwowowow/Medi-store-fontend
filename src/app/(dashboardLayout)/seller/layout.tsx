@@ -26,7 +26,16 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
   }, [user, isLoading, isSellerApproved, router, pathname]);
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-  if (!user || user.role !== "SELLER" || !isSellerApproved) return null;
+  if (!user || user.role !== "SELLER") return null;
+
+  // Pending approval page renders full-screen without sidebar
+  const isPendingPage = pathname === "/seller/pending-approval";
+  if (!isSellerApproved && isPendingPage) {
+    return <>{children}</>;
+  }
+
+  // Block all other pages for unapproved sellers
+  if (!isSellerApproved) return null;
 
   return (
     <div className="min-h-screen bg-gray-50">

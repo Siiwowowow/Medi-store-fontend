@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useCreateMedicine } from "@/hooks/useSellerMedicines";
 import { useCategories, ICategory } from "@/hooks/useCategories";
+import { compressImageFile } from "@/lib/utils/compressImage";
 import { UploadCloud, X, Loader2 } from "lucide-react";
 
 export default function AddMedicinePage() {
@@ -25,14 +26,20 @@ export default function AddMedicinePage() {
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isCompressing, setIsCompressing] = useState(false);
   
   const { mutate: createMedicine, isPending } = useCreateMedicine();
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
+    if (!file) return;
+    setIsCompressing(true);
+    try {
+      const compressed = await compressImageFile(file);
+      setImageFile(compressed);
+      setImagePreview(URL.createObjectURL(compressed));
+    } finally {
+      setIsCompressing(false);
     }
   };
 
@@ -94,9 +101,14 @@ export default function AddMedicinePage() {
                 className="hidden"
                 onChange={handleImageChange}
               />
-              {imagePreview ? (
+              {isCompressing ? (
+                <div className="flex flex-col items-center gap-2 py-2">
+                  <Loader2 className="w-8 h-8 animate-spin text-[#063c28]" />
+                  <p className="text-xs text-gray-500">Compressing image...</p>
+                </div>
+              ) : imagePreview ? (
                 <div className="relative inline-block">
-                  <Image src={imagePreview} alt="Preview" width={150} height={150} className="rounded-lg mx-auto" />
+                  <Image src={imagePreview} alt="Preview" width={150} height={150} className="rounded-lg mx-auto" style={{ height: "auto" }} />
                   <button
                     type="button"
                     onClick={(e) => {

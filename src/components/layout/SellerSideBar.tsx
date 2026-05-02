@@ -48,18 +48,18 @@ function SellerSidebarComponent() {
       {/* Brand */}
       <div className="px-5 pt-6 pb-4 border-b border-gray-100">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[#063c28] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-shop_dark_green flex items-center justify-center">
             <span className="text-white text-sm font-bold">M</span>
           </div>
-          <span className="text-[#063c28] text-lg font-bold">MediStore</span>
+          <span className="text-shop_dark_green text-lg font-bold">MediStore</span>
         </div>
       </div>
 
       {/* User Card */}
       <div className="px-4 py-4 border-b border-gray-100">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#fcf0e4] flex items-center justify-center">
-            <span className="text-[#063c28] font-bold text-sm">
+          <div className="w-10 h-10 rounded-full bg-shop_light_pink flex items-center justify-center">
+            <span className="text-shop_dark_green font-bold text-sm">
               {user?.name?.charAt(0) || "S"}
             </span>
           </div>
@@ -91,7 +91,7 @@ function SellerSidebarComponent() {
                 prefetch={true}
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all mb-0.5",
-                  active ? "bg-[#063c28] text-white" : "text-gray-700 hover:bg-gray-50"
+                  active ? "bg-shop_dark_green text-white" : "text-gray-700 hover:bg-gray-50"
                 )}
               >
                 <Icon className={cn("w-5 h-5", active ? "text-white" : "text-gray-400")} />
@@ -117,13 +117,13 @@ function SellerSidebarComponent() {
                 prefetch={true}
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all mb-0.5",
-                  active ? "bg-[#063c28] text-white" : "text-gray-700 hover:bg-gray-50"
+                  active ? "bg-shop_dark_green text-white" : "text-gray-700 hover:bg-gray-50"
                 )}
               >
                 <Icon className={cn(
                   "w-5 h-5", 
                   active ? "text-white" : "text-gray-400",
-                  item.orangeIcon && !active && "text-[#fb6c08]"
+                  item.orangeIcon && !active && "text-shop_orange"
                 )} />
                 <span className="text-sm font-medium">{item.name}</span>
               </Link>
@@ -147,13 +147,13 @@ function SellerSidebarComponent() {
                 prefetch={true}
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all mb-0.5",
-                  active ? "bg-[#063c28] text-white" : "text-gray-700 hover:bg-gray-50"
+                  active ? "bg-shop_dark_green text-white" : "text-gray-700 hover:bg-gray-50"
                 )}
               >
                 <Icon className={cn("w-5 h-5", active ? "text-white" : "text-gray-400")} />
                 <span className="text-sm font-medium">{item.name}</span>
                 {item.badge && pendingOrdersCount > 0 && (
-                  <span className="ml-auto w-5 h-5 bg-[#fb6c08] text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                  <span className="ml-auto w-5 h-5 bg-shop_orange text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                     {pendingOrdersCount}
                   </span>
                 )}
@@ -178,7 +178,7 @@ function SellerSidebarComponent() {
                 prefetch={true}
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all mb-0.5",
-                  active ? "bg-[#063c28] text-white" : "text-gray-700 hover:bg-gray-50"
+                  active ? "bg-shop_dark_green text-white" : "text-gray-700 hover:bg-gray-50"
                 )}
               >
                 <Icon className={cn("w-5 h-5", active ? "text-white" : "text-gray-400")} />

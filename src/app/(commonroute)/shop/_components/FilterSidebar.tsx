@@ -52,11 +52,10 @@ export default function FilterSidebar({
     onUpdate("maxPrice", maxPriceLocal);
   };
 
-  const visibleCategories = categories.slice(0, 6);
-  const visibleManufacturers = manufacturers.slice(0, 5);
+  const visibleManufacturers = manufacturers; // also show all manufacturers for now
 
   return (
-    <div className="w-[260px] flex-shrink-0 bg-white border-r border-gray-100 p-5 min-h-screen sticky top-[72px]">
+    <div className="w-full lg:w-[260px] flex-shrink-0 bg-white lg:border-r border-gray-100 lg:p-5 lg:min-h-screen lg:sticky top-[72px]">
       {/* Search */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -76,7 +75,7 @@ export default function FilterSidebar({
       </div>
 
       {/* Categories */}
-      {visibleCategories.length > 0 && (
+      {categories.length > 0 && (
         <div className="mt-6">
           <div className="flex justify-between items-center mb-3">
             <h3 className="text-sm font-semibold text-[#151515]">Categories</h3>
@@ -84,17 +83,17 @@ export default function FilterSidebar({
               <button onClick={() => onClear("categoryId")} className="text-[10px] text-[#fb6c08]">Clear</button>
             )}
           </div>
-          <div className="space-y-2">
-            {visibleCategories.map((cat) => (
+          <div className="space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
+            {categories.map((cat) => (
               <label key={cat.id} className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={filters.categoryId === cat.id}
                   onChange={() => onUpdate("categoryId", filters.categoryId === cat.id ? "" : cat.id)}
-                  className="w-4 h-4 rounded accent-[#063c28]"
+                  className="w-4 h-4 rounded accent-[#063c28] shrink-0"
                 />
-                <span className="text-sm text-[#52525b] flex-1">{cat.name}</span>
-                <span className="text-[10px] bg-[#f1f3f8] rounded-full px-2 py-0.5 text-[#52525b]">
+                <span className="text-sm text-[#52525b] flex-1 truncate" title={cat.name}>{cat.name}</span>
+                <span className="text-[10px] bg-[#f1f3f8] rounded-full px-2 py-0.5 text-[#52525b] shrink-0">
                   {cat._count?.medicines || 0}
                 </span>
               </label>

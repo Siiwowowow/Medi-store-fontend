@@ -23,6 +23,10 @@ const nextConfig: NextConfig = {
       },
     ],
     qualities: [25, 50, 75, 80, 90],
+    // Cloudinary already serves optimized images — skip Next.js server-side
+    // re-optimization which causes 7s+ fetch timeouts
+    unoptimized: true,
+    minimumCacheTTL: 60,
   },
   // 👇👇👇 ADD THIS REWRITES CONFIGURATION 👇👇👇
   async rewrites() {

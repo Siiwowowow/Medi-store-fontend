@@ -10,6 +10,7 @@ import Image from "next/image";
 import { useCategories } from "@/hooks/useCategories";
 
 import { UploadCloud, X, Loader2 } from "lucide-react";
+import { compressImageFile } from "@/lib/utils/compressImage";
 import { useQuery } from "@tanstack/react-query";
 import { useUpdateMedicine } from "@/services/useSellerMedicines";
 import { medicineService } from "@/services/medicine.service";
@@ -42,6 +43,7 @@ export default function EditMedicinePage() {
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isCompressing, setIsCompressing] = useState(false);
   
   const { mutate: updateMedicine, isPending } = useUpdateMedicine();
 
@@ -67,11 +69,16 @@ export default function EditMedicinePage() {
     }
   }, [medicine]);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
+    if (!file) return;
+    setIsCompressing(true);
+    try {
+      const compressed = await compressImageFile(file);
+      setImageFile(compressed);
+      setImagePreview(URL.createObjectURL(compressed));
+    } finally {
+      setIsCompressing(false);
     }
   };
 
@@ -154,9 +161,14 @@ export default function EditMedicinePage() {
                 className="hidden"
                 onChange={handleImageChange}
               />
-              {imagePreview ? (
+              {isCompressing ? (
+                <div className="flex flex-col items-center gap-2 py-2">
+                  <Loader2 className="w-8 h-8 animate-spin text-shop_dark_green" />
+                  <p className="text-xs text-gray-500">Compressing image...</p>
+                </div>
+              ) : imagePreview ? (
                 <div className="relative inline-block">
-                  <Image src={imagePreview} alt="Preview" width={150} height={150} className="rounded-lg mx-auto" />
+                  <Image src={imagePreview} alt="Preview" width={150} height={150} className="rounded-lg mx-auto" style={{ height: "auto" }} />
                   <button
                     type="button"
                     onClick={(e) => {

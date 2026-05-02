@@ -45,7 +45,7 @@ export const useCategories = () => {
     queryKey: ["categories"],
     queryFn: async () => {
       try {
-        const response = await httpClient.get("/categories");
+        const response = await httpClient.get("/categories", { params: { limit: 1000 } });
         console.log("📡 Raw categories response:", response);
         
         const categories = extractCategories(response);
