@@ -32,7 +32,7 @@ export const categoryService = {
   // Get all categories
   getAllCategories: async (params?: { limit?: number; includeInactive?: boolean }): Promise<Category[]> => {
     try {
-      const response = await httpClient.get<CategoriesResponse>("/categories", {
+      const response = await httpClient.get<Category[]>("/categories", {
         params: {
           limit: params?.limit || 50,
           includeInactive: params?.includeInactive || false,
@@ -52,7 +52,7 @@ export const categoryService = {
   // Get category by ID
   getCategoryById: async (id: string): Promise<Category | null> => {
     try {
-      const response = await httpClient.get<{ success: boolean; data: Category }>(`/categories/${id}`);
+      const response = await httpClient.get<Category>(`/categories/${id}`);
       if (response?.success && response?.data) {
         return response.data;
       }
@@ -66,7 +66,7 @@ export const categoryService = {
   // Get category by slug
   getCategoryBySlug: async (slug: string): Promise<Category | null> => {
     try {
-      const response = await httpClient.get<{ success: boolean; data: Category }>(`/categories/slug/${slug}`);
+      const response = await httpClient.get<Category>(`/categories/slug/${slug}`);
       if (response?.success && response?.data) {
         return response.data;
       }

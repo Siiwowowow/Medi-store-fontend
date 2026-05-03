@@ -13,6 +13,10 @@ export interface Medicine {
   originalPrice?: number;
   stock: number;
   manufacturer: string;
+  genericName?: string;
+  strength?: string;
+  dosageForm?: string;
+  isBestSeller?: boolean;
   image?: string;
   category?: {
     id: string;
