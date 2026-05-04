@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { 
   ArrowRight, 
   Shield, 
@@ -170,11 +171,13 @@ export default function HeroSection() {
 
             {/* Carousel Container - No shadows, just border */}
             <div className="relative rounded-[12px] border-[1.5px] border-white/10 bg-white/5 overflow-hidden">
-              <div className="relative aspect-4/3">
-                <img
+              <div className="relative aspect-[4/3]">
+                <Image
                   src={current.image}
                   alt={current.productName}
-                  className="w-full h-full object-cover"
+                  fill
+                  priority={currentSlide === 0}
+                  className="object-cover"
                 />
                 
                 {/* Product Name Overlay - Industrial */}

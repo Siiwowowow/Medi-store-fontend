@@ -56,6 +56,7 @@ export default function Footer() {
   // Hide footer on dashboard pages
   const isDashboard = pathname?.startsWith("/admin") || 
                       pathname?.startsWith("/user") || 
+                      pathname?.startsWith("/customer") || 
                       pathname?.startsWith("/seller");
 
   if (isDashboard) {

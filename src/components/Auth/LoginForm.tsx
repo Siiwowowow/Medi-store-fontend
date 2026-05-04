@@ -12,6 +12,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ILoginPayload, loginZodSchema } from "@/zod/auth.validation";
+import { ILoginActionResult } from "@/zod/auth.types";
+
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { Eye, EyeOff } from "lucide-react";
@@ -24,6 +26,8 @@ import { useUser } from "@/hooks/useUser";
 import { toast } from "sonner";
 import SocialLogin from "../shared/socialLogin/socialLogin";
 import { UserRole } from "@/lib/authUtils";
+import { ICurrentUser } from "@/types/user.types";
+
 
 interface LoginFormProps {
   redirectPath?: string;
@@ -36,9 +40,10 @@ const LoginForm = ({ redirectPath, defaultEmail = "" }: LoginFormProps) => {
   const router = useRouter();
   const { setUser } = useUser();
 
-  const { mutateAsync, isPending } = useMutation({
+  const { mutateAsync, isPending } = useMutation<ILoginActionResult, Error, ILoginPayload>({
     mutationFn: (payload: ILoginPayload) => loginAction(payload, redirectPath),
   });
+
 
   const form = useForm({
     defaultValues: {
@@ -49,7 +54,8 @@ const LoginForm = ({ redirectPath, defaultEmail = "" }: LoginFormProps) => {
     onSubmit: async ({ value }) => {
       setServerError(null);
       try {
-        const result = await mutateAsync(value) as any;
+        const result = await mutateAsync(value);
+
 
         if (!result.success) {
           setServerError(result.message || "Login failed");
@@ -57,7 +63,12 @@ const LoginForm = ({ redirectPath, defaultEmail = "" }: LoginFormProps) => {
         }
 
         toast.success("Login successful!");
-        setUser(result.user);
+        
+        if (result.user) {
+          setUser(result.user as ICurrentUser);
+        }
+
+
 
         router.refresh();
 
@@ -85,7 +96,7 @@ const LoginForm = ({ redirectPath, defaultEmail = "" }: LoginFormProps) => {
       case "SELLER":
         return "/seller/dashboard";
       case "CUSTOMER":
-        return "/dashboard";
+        return "/customer/dashboard";
       default:
         return "/";
     }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -10,11 +11,20 @@ import {
   Tag,
   Factory,
   Activity,
+  
 } from "lucide-react";
-import { useState } from "react";
+import { useCartWishlist } from "@/hooks/useCartWishlist";
 
-export default function MedicineCard({ medicine }: any) {
-  const [wishlisted, setWishlisted] = useState(false);
+export default function MedicineCard({ medicine, viewMode = "grid", priority = false }: { medicine: any, viewMode?: "grid" | "list", priority?: boolean }) {
+  const { 
+    handleAddToCart, 
+    handleAddToWishlist, 
+    isInCart,
+    isInWishlist
+  } = useCartWishlist();
+
+  const inCart = isInCart(medicine.id);
+  const inWishlist = isInWishlist(medicine.id);
 
   const discount = medicine.originalPrice
     ? Math.round(
@@ -32,14 +42,10 @@ export default function MedicineCard({ medicine }: any) {
 
       {/* ❤️ Wishlist */}
       <button
-        onClick={() => setWishlisted(!wishlisted)}
-        className="absolute top-2 right-2 z-10 bg-white p-1.5 rounded-full shadow"
+        onClick={() => handleAddToWishlist(medicine)}
+        className="absolute top-2 right-2 z-10 bg-white p-1.5 rounded-full shadow hover:bg-rose-50 transition-colors"
       >
-        <Heart
-          className={`w-4 h-4 ${
-            wishlisted ? "fill-red-500 text-red-500" : "text-gray-400"
-          }`}
-        />
+        <Heart className={`w-4 h-4 ${inWishlist ? "text-rose-500 fill-rose-500" : "text-gray-400 hover:text-rose-500"}`} />
       </button>
 
       {/* 🖼 Image */}
@@ -50,6 +56,7 @@ export default function MedicineCard({ medicine }: any) {
             alt={medicine.name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            priority={priority}
             className="object-contain p-3"
           />
         ) : (
@@ -165,16 +172,17 @@ export default function MedicineCard({ medicine }: any) {
 
           {/* Button */}
           <button
+            onClick={() => handleAddToCart(medicine)}
             disabled={isOutOfStock}
-            className={`w-full flex items-center justify-center gap-1 text-[10px] sm:text-xs font-semibold py-1.5 sm:py-2 rounded-lg transition 
+            className={`w-full flex items-center justify-center gap-1 text-[10px] sm:text-xs font-semibold py-1.5 sm:py-2 rounded-lg transition active:scale-[0.98]
             ${
               isOutOfStock
                 ? "bg-gray-300"
-                : "bg-shop_orange hover:bg-[#e05e06] text-white"
+                : "bg-shop_orange hover:bg-[#e05e06] text-white shadow-sm"
             }`}
           >
             <ShoppingCart className="w-3 h-3" />
-            {isOutOfStock ? "Unavailable" : "Add"}
+            {isOutOfStock ? "Unavailable" : inCart ? "In Cart" : "Add"}
           </button>
         </div>
       </div>

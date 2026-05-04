@@ -9,7 +9,7 @@ import CartIcon from "./CartIcon";
 import WishlistIcon from "./WishlistIcon";
 import AuthButtons from "./AuthButtons";
 import UserAvatar from "./UserAvatar";
-import NavLinks from "./Navlinks ";
+import NavLinks from "./Navlinks";
 import { getDashboardRoute } from "./utils";
 import type { NavLink, Category } from "./types";
 
@@ -172,8 +172,8 @@ export default function DesktopNav({
             </button>
           )}
 
-          <WishlistIcon count={wishlistCount} />
-          <CartIcon     count={cartCount} />
+          <WishlistIcon />
+          <CartIcon />
 
           {!searchOpen && (
             <div style={{ width: "1px", height: "20px", background: "rgba(255,255,255,0.15)", margin: "0 4px" }} />

@@ -14,7 +14,7 @@ import WishlistIcon from "./WishlistIcon";
 import UserAvatar from "./UserAvatar";
 import { getDashboardRoute } from "./utils";
 import type { NavLink, Category } from "./types";
-import NavLinks from "./Navlinks ";
+import NavLinks from "./Navlinks";
 import SocialLogin from "../socialLogin/socialLogin";
 
 interface Props {
@@ -96,8 +96,8 @@ export default function MobileNav({
               <Search style={{ width: "20px", height: "20px" }} />
             </button>
 
-            <WishlistIcon count={wishlistCount} />
-            <CartIcon     count={cartCount} />
+            <WishlistIcon />
+            <CartIcon />
             {user && <UserAvatar />}
 
             {/* Hamburger */}

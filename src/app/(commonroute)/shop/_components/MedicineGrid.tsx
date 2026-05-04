@@ -51,8 +51,13 @@ export default function MedicineGrid({
       className={viewMode === "grid" ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4" : "space-y-4"}
       style={{ opacity: isFetching ? 0.6 : 1, transition: "opacity 0.2s" }}
     >
-      {medicines.map((medicine) => (
-        <MedicineCard key={medicine.id} medicine={medicine} viewMode={viewMode} />
+      {medicines.map((medicine, index) => (
+        <MedicineCard 
+          key={medicine.id} 
+          medicine={medicine} 
+          viewMode={viewMode} 
+          priority={index < 4}
+        />
       ))}
     </div>
   );

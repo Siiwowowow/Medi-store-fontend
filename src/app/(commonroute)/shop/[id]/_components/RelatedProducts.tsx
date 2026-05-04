@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingBag, Star } from "lucide-react";
+import { ShoppingBag, Star, Loader2 } from "lucide-react";
 import type { Medicine } from "@/services/medicine.service";
+import { useCartWishlist } from "@/hooks/useCartWishlist";
 
 interface RelatedProductsProps {
   products: Medicine[];
@@ -12,6 +13,7 @@ interface RelatedProductsProps {
 
 // Same card style as Shop Page
 function RelatedProductCard({ product }: { product: Medicine }) {
+  const { handleAddToCart, isAddingToCart } = useCartWishlist();
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
@@ -90,10 +92,16 @@ function RelatedProductCard({ product }: { product: Medicine }) {
 
         {/* Button */}
         <button
-          disabled={isOutOfStock}
-          className="mt-2 w-full bg-shop_orange hover:bg-[#e05e06] text-white text-[11px] font-semibold py-1.5 rounded-lg transition-all active:scale-[0.98] disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+          onClick={() => handleAddToCart(product.id, 1)}
+          disabled={isOutOfStock || isAddingToCart}
+          className="mt-2 w-full bg-shop_orange hover:bg-[#e05e06] text-white text-[11px] font-semibold py-1.5 rounded-lg transition-all active:scale-[0.98] disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-1"
         >
-          Add to Cart
+          {isAddingToCart ? (
+            <Loader2 className="w-3 h-3 animate-spin" />
+          ) : (
+            "Add to Cart"
+          )}
+          {isAddingToCart && "Adding..."}
         </button>
       </div>
     </div>
@@ -133,3 +141,5 @@ export default function RelatedProducts({ products, currentProductId }: RelatedP
     </section>
   );
 }
+
+

@@ -9,18 +9,19 @@ import {
 import { httpClient } from "@/lib/axios/httpClient";
 import { setTokenInCookies } from "@/lib/tokenUtils";
 import { ApiErrorResponse } from "@/types/api.types";
-import { ILoginResponse } from "@/zod/auth.types";
+import { ILoginActionResult, ILoginResponse } from "@/zod/auth.types";
 import {
   ILoginPayload,
   loginZodSchema,
 } from "@/zod/auth.validation";
-
 import { redirect } from "next/navigation";
+
 
 export const loginAction = async (
   payload: ILoginPayload,
   redirectPath?: string
-): Promise<ILoginResponse | ApiErrorResponse> => {
+): Promise<ILoginActionResult> => {
+
   const parsedPayload = loginZodSchema.safeParse(payload);
 
   if (!parsedPayload.success) {
@@ -71,7 +72,8 @@ export const loginAction = async (
       success: true,
       redirectUrl: finalRedirect,
       user
-    } as any;
+    };
+
   } catch (error: any) {
     console.log(error, "login error");
 

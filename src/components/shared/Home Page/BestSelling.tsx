@@ -3,8 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
-import { Star, ShoppingCart, Database, RefreshCw } from "lucide-react";
+import { Star, ShoppingCart, Database, RefreshCw, Loader2 } from "lucide-react";
 import { medicineService } from "@/services/medicine.service";
+import { useCartWishlist } from "@/hooks/useCartWishlist";
 
 type Product = {
   id: string;
@@ -21,6 +22,8 @@ type Product = {
 
 const ProductCard = ({ product }: { product: Product }) => {
   const stock = product.stock ?? 50;
+  const { handleAddToCart, isAddingToCart, isInCart } = useCartWishlist();
+  const inCart = isInCart(product.id);
 
   const getStock = () => {
     if (stock > 20) return { text: "In Stock", color: "text-green-600" };
@@ -38,10 +41,10 @@ const ProductCard = ({ product }: { product: Product }) => {
           alt={product.name}
           fill
           sizes="(max-width: 768px) 50vw, 25vw"
-          loading="eager"
+          priority
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
-        <span className="absolute top-2 left-2 text-[10px] px-2 py-0.5 bg-orange-500 text-white rounded">
+        <span className="absolute top-2 left-2 text-[10px] px-2 py-0.5 bg-shop_orange text-white rounded">
           BEST SELLER
         </span>
       </Link>
@@ -86,11 +89,18 @@ const ProductCard = ({ product }: { product: Product }) => {
       </p>
 
       <button
-        disabled={stock === 0}
-        className="mt-3 w-full flex items-center justify-center gap-1 bg-orange-500 text-white text-xs py-2 rounded-lg hover:bg-orange-600 transition disabled:opacity-50"
+        onClick={() => handleAddToCart(product.id, 1)}
+        disabled={stock === 0 || isAddingToCart}
+        className={`mt-3 w-full flex items-center justify-center gap-1 text-white text-xs py-2 rounded-lg transition disabled:opacity-50 ${
+          inCart ? "bg-shop_dark_green" : "bg-shop_orange hover:bg-shop_orange/90"
+        }`}
       >
-        <ShoppingCart className="w-3 h-3" />
-        Add
+        {isAddingToCart ? (
+          <Loader2 className="w-3 h-3 animate-spin" />
+        ) : (
+          <ShoppingCart className="w-3 h-3" />
+        )}
+        {isAddingToCart ? "Adding..." : inCart ? "In Cart" : "Add"}
       </button>
     </div>
   );

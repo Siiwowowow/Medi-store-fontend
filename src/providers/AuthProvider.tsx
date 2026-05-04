@@ -3,21 +3,9 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { logoutUser, getUserInfo } from "@/services/auth.services";
 
-export interface ICurrentUser {
-    id: string;
-    email: string;
-    name: string;
-    role: 'SUPER_ADMIN' | 'ADMIN' | 'SELLER' | 'CUSTOMER';
-    emailVerified: boolean;
-    needPasswordChange: boolean;
-    isDeleted: boolean;
-    status: string;
-    image?: string;
-    isSellerApproved?: boolean;
-    sellerStatus?: 'PENDING' | 'APPROVED' | 'REJECTED';
-    shopName?: string;
-    sellerId?: string;
-}
+
+import { ICurrentUser } from "@/types/user.types";
+
 
 interface AuthContextType {
     user: ICurrentUser | null;

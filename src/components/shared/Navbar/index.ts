@@ -7,7 +7,7 @@ export { default as SearchBar } from "./SearchBar";
 export { default as CartIcon } from "./CartIcon";
 export { default as WishlistIcon } from "./WishlistIcon";
 export { default as CategoryMenu } from "./CategoryMenu";
-export { default as NavLinks } from "./Navlinks ";
+export { default as NavLinks } from "./Navlinks";
 export { default as AuthButtons } from "./AuthButtons";
 export { default as Logo } from "./Logo";
 export type * from "./types";

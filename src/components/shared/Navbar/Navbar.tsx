@@ -68,6 +68,7 @@ export default function Navbar({ categories = defaultCategories, showTopBar = tr
   // Hide Navbar on dashboard pages
   const isDashboard = pathname?.startsWith("/admin") || 
                       pathname?.startsWith("/user") || 
+                      pathname?.startsWith("/customer") || 
                       pathname?.startsWith("/seller");
 
   if (isDashboard) {
@@ -79,14 +80,10 @@ export default function Navbar({ categories = defaultCategories, showTopBar = tr
       <DesktopNav
         publicLinks={defaultPublicLinks}
         categories={categories}
-        cartCount={0}
-        wishlistCount={0}
       />
       <MobileNav
         publicLinks={defaultPublicLinks}
         categories={categories}
-        cartCount={0}
-        wishlistCount={0}
       />
     </header>
   );

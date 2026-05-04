@@ -113,7 +113,7 @@ export const getDefaultDashboardRoute = (role: UserRole): string => {
     case "SELLER":
       return "/seller/dashboard";
     case "CUSTOMER":
-      return "/dashboard";
+      return "/customer/dashboard";
     default:
       return "/";
   }
