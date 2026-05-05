@@ -40,12 +40,16 @@ export const adminService = {
   },
 
   // Categories
-  createCategory: async (data: any) => {
-    return await httpClient.post<any>("/categories", data);
+  createCategory: async (data: FormData | any) => {
+    return await httpClient.post<any>("/categories", data, {
+      timeout: 120000, // 2 minutes for image uploads
+    });
   },
   
-  updateCategory: async (id: string, data: any) => {
-    return await httpClient.patch<any>(`/categories/${id}`, data);
+  updateCategory: async (id: string, data: FormData | any) => {
+    return await httpClient.patch<any>(`/categories/${id}`, data, {
+      timeout: 120000, // 2 minutes for image uploads
+    });
   },
 
   deleteCategory: async (id: string) => {

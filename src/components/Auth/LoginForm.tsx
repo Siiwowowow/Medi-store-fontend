@@ -41,7 +41,7 @@ const LoginForm = ({ redirectPath, defaultEmail = "" }: LoginFormProps) => {
   const { setUser } = useUser();
 
   const { mutateAsync, isPending } = useMutation<ILoginActionResult, Error, ILoginPayload>({
-    mutationFn: (payload: ILoginPayload) => loginAction(payload, redirectPath),
+    mutationFn: (payload: ILoginPayload) => loginAction(payload, redirectPath || "/"),
   });
 
 

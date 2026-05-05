@@ -1,32 +1,26 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect, useState } from "react";
 import { categoryService } from "@/services/category.service";
 import { adminService } from "@/services/admin.service";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tags, Trash2, Edit, Plus } from "lucide-react";
+import { Tags, Trash2,  } from "lucide-react";
 import { toast } from "sonner";
+import CreateCategoryModal from "@/components/Admin/Categories/CreateCategoryModal";
+import EditCategoryModal from "@/components/Admin/Categories/EditCategoryModal";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function AdminCategoriesPage() {
-  const [categories, setCategories] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const fetchCategories = async () => {
-    try {
-      const res = await categoryService.getAllCategories({ includeInactive: true });
-      setCategories(res);
-    } catch (err) {
-      toast.error("Failed to fetch categories");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+  const queryClient = useQueryClient();
+  
+  const { data: categories = [], isLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => categoryService.getAllCategories({ includeInactive: true }),
+  });
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this category?")) return;
@@ -34,7 +28,7 @@ export default function AdminCategoriesPage() {
       const res = await adminService.deleteCategory(id);
       if (res?.success) {
         toast.success("Category deleted successfully");
-        fetchCategories();
+        queryClient.invalidateQueries({ queryKey: ["categories"] });
       } else {
         toast.error("Deletion failed");
       }
@@ -47,9 +41,7 @@ export default function AdminCategoriesPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-shop_dark_green">Categories Control</h1>
-        <Button className="bg-shop_orange hover:bg-[#e05d00] text-white">
-          <Plus className="w-4 h-4 mr-2" /> Add Category
-        </Button>
+        <CreateCategoryModal onSuccess={() => queryClient.invalidateQueries({ queryKey: ["categories"] })} />
       </div>
       <Card>
         <CardHeader>
@@ -74,7 +66,7 @@ export default function AdminCategoriesPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {categories.map((c) => (
+                {categories.map((c: any) => (
                   <TableRow key={c.id}>
                     <TableCell>
                       {c.image ? (
@@ -84,11 +76,13 @@ export default function AdminCategoriesPage() {
                       )}
                     </TableCell>
                     <TableCell className="font-semibold text-shop_dark_green">{c.name}</TableCell>
-                    <TableCell>{c.isActive ? "Active" : "Inactive"}</TableCell>
+                    <TableCell>
+                      <span className={`px-2 py-1 rounded-full text-xs ${c.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                        {c.isActive ? "Active" : "Inactive"}
+                      </span>
+                    </TableCell>
                     <TableCell className="text-right space-x-2">
-                      <Button size="sm" variant="outline" className="text-blue-500 border-blue-200 hover:bg-blue-50" onClick={() => toast.info("Edit coming soon")}>
-                        <Edit className="w-4 h-4" />
-                      </Button>
+                      <EditCategoryModal category={c} onSuccess={() => queryClient.invalidateQueries({ queryKey: ["categories"] })} />
                       <Button size="sm" variant="destructive" onClick={() => handleDelete(c.id)}>
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -103,3 +97,4 @@ export default function AdminCategoriesPage() {
     </div>
   );
 }
+

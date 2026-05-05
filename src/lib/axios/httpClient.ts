@@ -13,7 +13,7 @@ const instance = axios.create({
     timeout: 30000, // Default 30s — uploads override this per-request
     withCredentials: true,
     headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json', // Remove default to let axios handle it
     }
 });
 

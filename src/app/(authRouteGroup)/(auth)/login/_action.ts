@@ -8,18 +8,17 @@ import {
 
 import { httpClient } from "@/lib/axios/httpClient";
 import { setTokenInCookies } from "@/lib/tokenUtils";
-import { ApiErrorResponse } from "@/types/api.types";
 import { ILoginActionResult, ILoginResponse } from "@/zod/auth.types";
 import {
   ILoginPayload,
   loginZodSchema,
 } from "@/zod/auth.validation";
-import { redirect } from "next/navigation";
+import { redirect, unstable_rethrow } from "next/navigation";
 
 
 export const loginAction = async (
   payload: ILoginPayload,
-  redirectPath?: string
+  redirectPath: string = "/"
 ): Promise<ILoginActionResult> => {
 
   const parsedPayload = loginZodSchema.safeParse(payload);
@@ -75,6 +74,7 @@ export const loginAction = async (
     };
 
   } catch (error: any) {
+    unstable_rethrow(error);
     console.log(error, "login error");
 
     // ✅ handle email not verified
