@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 import { getUserInfo } from "@/services/auth.services";
 import Footer from "@/components/shared/Footer/Footer";
 import { ToastProvider } from "@/providers/ToastProvider";
+import NextTopLoader from "nextjs-toploader";
 
 export const metadata: Metadata = {
   title: "MediStore",
@@ -24,6 +25,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className="flex flex-col min-h-screen font-poppins antialiased">
+        <NextTopLoader color="#fb6c08" showSpinner={false} />
         <QueryProviders>
           <AuthProvider initialUser={user}>
             <TooltipProvider>

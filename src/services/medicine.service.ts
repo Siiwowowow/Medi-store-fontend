@@ -5,6 +5,7 @@ import { httpClient } from "@/lib/axios/httpClient";
 import { ApiResponse } from "@/types/api.types";
 
 export interface Medicine {
+  [x: string]: any;
   id: string;
   name: string;
   slug: string;

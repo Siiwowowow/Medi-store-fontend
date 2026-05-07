@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import { medicineService } from "@/services/medicine.service";
 import { categoryService } from "@/services/category.service";
 import ResultsBar from "./_components/ResultsBar";
@@ -11,7 +12,6 @@ import FilterSidebar from "./_components/FilterSidebar";
 import MedicineGrid from "./_components/MedicineGrid";
 import Pagination from "./_components/Pagination";
 import MobileFilterDrawer from "./_components/MobileFilterDrawer";
-import CategoriesSection from "@/components/shared/Categories/CategoriesSection";
 import type { Medicine } from "@/services/medicine.service";
 import type { Category } from "@/services/category.service";
 
@@ -30,7 +30,8 @@ export default function ShopPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [filters, setFilters] = useState<Filters>({
+  // Extract filters from URL
+  const filters = useMemo(() => ({
     search: searchParams.get("search") || "",
     categoryId: searchParams.get("categoryId") || "",
     manufacturer: searchParams.get("manufacturer") || "",
@@ -39,28 +40,19 @@ export default function ShopPage() {
     page: Number(searchParams.get("page")) || 1,
     sortBy: searchParams.get("sortBy") || "newest",
     availability: searchParams.get("availability") || "all",
-  });
+  }), [searchParams]);
 
-  // ✅ Add proper types
-  const [medicines, setMedicines] = useState<Medicine[]>([]);
-  const [meta, setMeta] = useState({ total: 0, page: 1, limit: 12, totalPages: 1 });
-  const [loading, setLoading] = useState(true);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [manufacturers, setManufacturers] = useState<string[]>([]);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  const activeCount = [
-    filters.search,
-    filters.categoryId,
-    filters.manufacturer,
-    filters.minPrice > 0 || filters.maxPrice < 10000 ? "price" : null,
-    filters.availability !== "all" ? "availability" : null,
-  ].filter(Boolean).length;
-
-  const fetchProducts = useCallback(async () => {
-    setLoading(true);
-    try {
+  // ✅ Use TanStack Query for Products (with Caching & Background Refresh)
+  const { 
+    data: productsData, 
+    isLoading: productsLoading, 
+    isFetching: productsFetching 
+  } = useQuery({
+    queryKey: ["products", filters],
+    queryFn: async () => {
       const params: any = {
         page: filters.page,
         limit: 12,
@@ -71,77 +63,56 @@ export default function ShopPage() {
       if (filters.manufacturer) params.manufacturer = filters.manufacturer;
       if (filters.minPrice > 0) params.minPrice = filters.minPrice;
       if (filters.maxPrice < 10000) params.maxPrice = filters.maxPrice;
-
       if (filters.availability === "instock") params.minStock = 1;
       if (filters.availability === "outofstock") params.stock = 0;
 
-      if (filters.sortBy === "price_asc") {
-        params.sortBy = "price";
-        params.sortOrder = "asc";
-      } else if (filters.sortBy === "price_desc") {
-        params.sortBy = "price";
-        params.sortOrder = "desc";
-      } else if (filters.sortBy === "newest") {
-        params.sortBy = "createdAt";
-        params.sortOrder = "desc";
-      } else if (filters.sortBy === "rating") {
-        params.sortBy = "avgRating";
-        params.sortOrder = "desc";
-      } else if (filters.sortBy === "bestselling") {
-        params.sortBy = "orderCount";
-        params.sortOrder = "desc";
-      }
+      // Map sort labels to backend params
+      const sortMap: Record<string, { sortBy: string; sortOrder: string }> = {
+        price_asc: { sortBy: "price", sortOrder: "asc" },
+        price_desc: { sortBy: "price", sortOrder: "desc" },
+        newest: { sortBy: "createdAt", sortOrder: "desc" },
+        rating: { sortBy: "avgRating", sortOrder: "desc" },
+        bestselling: { sortBy: "orderCount", sortOrder: "desc" },
+      };
 
-      console.log("🛒 Fetching products with params:", params);
+      const sortParams = sortMap[filters.sortBy] || sortMap.newest;
+      Object.assign(params, sortParams);
+
       const response = await medicineService.getAllMedicines(params);
+      return response;
+    },
+    staleTime: 60 * 1000, // Consider data fresh for 1 minute
+  });
 
-      if (response?.success) {
-        setMedicines(response.data || []);
-        setMeta(response.meta || { total: 0, page: 1, limit: 12, totalPages: 1 });
-      }
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [filters]);
+  // ✅ Fetch Initial Categories & Manufacturers
+  const { data: categories = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const response = await categoryService.getAllCategories({ limit: 50 });
+      return response || [];
+    },
+    staleTime: 10 * 60 * 1000, // Categories don't change often
+  });
 
-  useEffect(() => {
-    const fetchInitialData = async () => {
-      try {
-        const [cats, mans] = await Promise.all([
-          categoryService.getAllCategories({ limit: 50 }),
-          medicineService.getManufacturers(),
-        ]);
-        setCategories(cats);
-        setManufacturers(mans);
-      } catch (error) {
-        console.error("Error fetching initial data:", error);
-      }
-    };
-    fetchInitialData();
-  }, []);
+  const { data: manufacturers = [] } = useQuery({
+    queryKey: ["manufacturers"],
+    queryFn: async () => {
+      const response = await medicineService.getManufacturers();
+      return response || [];
+    },
+    staleTime: 10 * 60 * 1000,
+  });
 
-  useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+  const medicines = productsData?.data || [];
+  const meta = productsData?.meta || { total: 0, page: 1, limit: 12, totalPages: 1 };
 
-  // ✅ Sync state with URL
-  useEffect(() => {
-    const nextFilters: Filters = {
-      search: searchParams.get("search") || "",
-      categoryId: searchParams.get("categoryId") || "",
-      manufacturer: searchParams.get("manufacturer") || "",
-      minPrice: Number(searchParams.get("minPrice")) || 0,
-      maxPrice: Number(searchParams.get("maxPrice")) || 10000,
-      page: Number(searchParams.get("page")) || 1,
-      sortBy: searchParams.get("sortBy") || "newest",
-      availability: searchParams.get("availability") || "all",
-    };
-    
-    // Only update if filters actually changed to avoid infinite loops
-    setFilters(nextFilters);
-  }, [searchParams]);
+  const activeCount = [
+    filters.search,
+    filters.categoryId,
+    filters.manufacturer,
+    filters.minPrice > 0 || filters.maxPrice < 10000 ? "price" : null,
+    filters.availability !== "all" ? "availability" : null,
+  ].filter(Boolean).length;
 
   const updateUrl = useCallback((newFilters: Filters) => {
     const params = new URLSearchParams();
@@ -178,25 +149,18 @@ export default function ShopPage() {
     updateUrl(next);
   }, [filters, updateUrl]);
 
-  const handleSortChange = useCallback((sort: string) => {
-    updateFilter("sortBy", sort);
-  }, [updateFilter]);
-
-  const handleApplyFilters = useCallback(() => setMobileFilterOpen(false), []);
-
   return (
     <div className="bg-shop_light_bg min-h-screen">
-
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex gap-6">
           <div className="hidden lg:block">
             <FilterSidebar
               filters={filters}
-              categories={categories}
-              manufacturers={manufacturers}
+              categories={categories as any}
+              manufacturers={manufacturers as any}
               onUpdate={updateFilter}
               onClear={clearFilter}
-              onApply={handleApplyFilters}
+              onApply={() => setMobileFilterOpen(false)}
             />
           </div>
 
@@ -205,24 +169,24 @@ export default function ShopPage() {
               total={meta.total}
               activeCount={activeCount}
               sortBy={filters.sortBy}
-              onSortChange={handleSortChange}
+              onSortChange={(sort) => updateFilter("sortBy", sort)}
               onMobileFilterOpen={() => setMobileFilterOpen(true)}
-              isFetching={loading}
+              isFetching={productsFetching}
               viewMode={viewMode}
               onViewChange={setViewMode}
             />
 
             <ActiveFilters
               filters={filters}
-              categories={categories}
+              categories={categories as any}
               onClear={clearFilter}
               onClearAll={clearAllFilters}
             />
 
             <MedicineGrid
               medicines={medicines}
-              isLoading={loading}
-              isFetching={loading}
+              isLoading={productsLoading}
+              isFetching={productsFetching}
               onClearFilters={clearAllFilters}
               hasActiveFilters={activeCount > 0}
             />
@@ -242,11 +206,11 @@ export default function ShopPage() {
         open={mobileFilterOpen}
         onClose={() => setMobileFilterOpen(false)}
         filters={filters}
-        categories={categories}
-        manufacturers={manufacturers}
+        categories={categories as any}
+        manufacturers={manufacturers as any}
         onUpdate={updateFilter}
         onClear={clearFilter}
-        onApply={handleApplyFilters}
+        onApply={() => setMobileFilterOpen(false)}
         onClearAll={clearAllFilters}
         total={meta.total}
       />

@@ -1,111 +1,14 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { ShoppingBag, Star, Loader2 } from "lucide-react";
+import { ChevronRight, Sparkles } from "lucide-react";
 import type { Medicine } from "@/services/medicine.service";
-import { useCartWishlist } from "@/hooks/useCartWishlist";
+import MedicineCard from "../../_components/MedicineCard";
 
 interface RelatedProductsProps {
   products: Medicine[];
   currentProductId: string;
-}
-
-// Same card style as Shop Page
-function RelatedProductCard({ product }: { product: Medicine }) {
-  const { handleAddToCart, isAddingToCart } = useCartWishlist();
-  const discount = product.originalPrice
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-    : 0;
-
-  const isOutOfStock = product.stock === 0;
-
-  return (
-    <div className="group bg-white lg:max-w-[240px] rounded-xl border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md hover:-translate-y-1">
-      {/* Image Section */}
-      <Link href={`/shop/${product.id}`} className="relative block h-32 bg-gray-50 overflow-hidden">
-        {product.image ? (
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-contain p-3 transition-transform group-hover:scale-105"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <ShoppingBag className="w-8 h-8 text-gray-300" />
-          </div>
-        )}
-        {discount > 0 && !isOutOfStock && (
-          <span className="absolute top-2 left-2 bg-shop_orange text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
-            {discount}% OFF
-          </span>
-        )}
-      </Link>
-
-      {/* Content Section - Same as Shop Page */}
-      <div className="p-3">
-        {/* Category */}
-        <p className="text-[10px] font-semibold uppercase text-green-600">
-          {product.category?.name || "MEDICINE"}
-        </p>
-
-        {/* Name */}
-        <Link href={`/shop/${product.id}`}>
-          <h3 className="text-sm font-semibold text-gray-800 line-clamp-1 mt-1 hover:text-shop_dark_green transition">
-            {product.name}
-          </h3>
-        </Link>
-
-        {/* Rating */}
-        <div className="flex items-center gap-1 mt-1">
-          <div className="flex">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <Star
-                key={i}
-                className="w-2.5 h-2.5"
-                fill={i <= Math.round(product.avgRating || 4) ? "#fb6c08" : "none"}
-                stroke="#fb6c08"
-              />
-            ))}
-          </div>
-          <span className="text-[9px] text-gray-400">({product.reviewCount || 0})</span>
-        </div>
-
-        {/* Price */}
-        <div className="mt-2 flex items-center gap-2">
-          <span className="text-sm font-bold text-shop_dark_green">৳{product.price}</span>
-          {product.originalPrice && product.originalPrice > product.price && (
-            <span className="text-[9px] line-through text-gray-400">৳{product.originalPrice}</span>
-          )}
-        </div>
-
-        {/* Stock Status */}
-        {isOutOfStock ? (
-          <p className="text-[9px] text-red-500 mt-1">Out of Stock</p>
-        ) : product.stock <= 5 ? (
-          <p className="text-[9px] text-amber-500 mt-1">Only {product.stock} left</p>
-        ) : (
-          <p className="text-[9px] text-green-600 mt-1">In Stock</p>
-        )}
-
-        {/* Button */}
-        <button
-          onClick={() => handleAddToCart(product.id, 1)}
-          disabled={isOutOfStock || isAddingToCart}
-          className="mt-2 w-full bg-shop_orange hover:bg-[#e05e06] text-white text-[11px] font-semibold py-1.5 rounded-lg transition-all active:scale-[0.98] disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-1"
-        >
-          {isAddingToCart ? (
-            <Loader2 className="w-3 h-3 animate-spin" />
-          ) : (
-            "Add to Cart"
-          )}
-          {isAddingToCart && "Adding..."}
-        </button>
-      </div>
-    </div>
-  );
 }
 
 export default function RelatedProducts({ products, currentProductId }: RelatedProductsProps) {
@@ -117,24 +20,48 @@ export default function RelatedProducts({ products, currentProductId }: RelatedP
   if (relatedProducts.length === 0) return null;
 
   return (
-    <section className="bg-white py-16">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8">
-        <div className="flex items-end justify-between mb-8">
-          <div>
-            <span className="text-shop_light_green text-xs font-bold uppercase tracking-wider">You May Also Like</span>
-            <h2 className="text-2xl font-bold text-gray-900">Related Products</h2>
+    <section className="bg-gradient-to-b from-white to-[#f8faf9] py-20 border-t border-gray-100">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 bg-shop_orange/10 px-3 py-1 rounded-full">
+              <Sparkles className="w-3.5 h-3.5 text-shop_orange" />
+              <span className="text-shop_orange text-[10px] font-bold uppercase tracking-widest">Handpicked for you</span>
+            </div>
+            <h2 className="text-3xl font-black text-[#063c28] tracking-tight">
+              Related <span className="text-shop_orange">Products</span>
+            </h2>
+            <p className="text-sm text-gray-500 font-medium max-w-md">
+              Based on the medicine you're viewing, these items might also be helpful for your health journey.
+            </p>
           </div>
+          
           <Link
             href="/shop"
-            className="text-sm text-shop_dark_green hover:underline flex items-center gap-1"
+            className="group flex items-center gap-2 text-sm font-bold text-shop_dark_green hover:text-shop_orange transition-all duration-300"
           >
-            View All →
+            <span>View all products</span>
+            <div className="w-8 h-8 rounded-full bg-[#fcf0e4] flex items-center justify-center group-hover:bg-shop_orange group-hover:text-white transition-all">
+              <ChevronRight className="w-4 h-4" />
+            </div>
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {relatedProducts.map((product) => (
-            <RelatedProductCard key={product.id} product={product} />
+        {/* Professional Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          {relatedProducts.map((product, index) => (
+            <div 
+              key={product.id}
+              className="animate-fade-in-up"
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              <MedicineCard 
+                medicine={product} 
+                priority={false}
+              />
+            </div>
           ))}
         </div>
       </div>
@@ -142,4 +69,4 @@ export default function RelatedProducts({ products, currentProductId }: RelatedP
   );
 }
 
-
+

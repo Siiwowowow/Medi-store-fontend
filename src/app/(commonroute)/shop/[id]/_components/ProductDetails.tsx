@@ -13,7 +13,11 @@ import {
   ChevronUp,
   AlertCircle,
   X,
-  Loader2
+  Loader2,
+  Activity,
+  Factory,
+  Package,
+  Tag
 } from "lucide-react";
 import Image from "next/image";
 import type { Medicine } from "@/services/medicine.service";
