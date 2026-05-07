@@ -246,6 +246,7 @@ export default function CategoriesSection({
                         src={category.image}
                         alt={category.name}
                         className="w-8 h-8 object-contain"
+                        style={{ width: "auto", height: "auto" }}
                       />
                     ) : (
                       <span className="text-3xl" role="img" aria-label={category.name}>{emoji}</span>

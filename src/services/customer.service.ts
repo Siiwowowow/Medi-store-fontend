@@ -1,13 +1,49 @@
 import { httpClient } from "@/lib/axios/httpClient";
-import { ICart, IWishlistItem, IOrderResponse } from "@/types/customer.types";
+import { ICart, IWishlistItem, IOrderResponse, IOrder } from "@/types/customer.types";
 
+export interface IPaymentInitiateResponse {
+  paymentUrl: string;
+  sessionId: string;
+}
+
+
+export const getOrderById = async (orderId: string): Promise<IOrder> => {
+  const response = await httpClient.get<IOrder>(`/orders/${orderId}`);
+  return response.data;
+};
+
+export const verifyPayment = async (sessionId: string) => {
+  const response = await httpClient.get(`/payment/verify`, {
+    params: { sessionId }
+  });
+  return response.data;
+};
 
 // --- ORDERS ---
 export const getCustomerOrders = async (filters?: { status?: string }): Promise<IOrderResponse> => {
-  const response = await httpClient.get<IOrderResponse>("/orders/my-orders", {
+  const response = await httpClient.get<IOrder[]>("/orders/my-orders", {
     params: filters
   });
-  return response.data as IOrderResponse;
+  
+  return {
+    orders: response.data || [],
+    meta: response.meta || { page: 1, limit: 10, total: 0, totalPages: 0 }
+  };
+};
+
+export const createOrder = async (payload: { 
+  items: { medicineId: string; quantity: number }[]; 
+  shippingAddress: string; 
+  phoneNumber: string; 
+  notes?: string 
+}) => {
+  const response = await httpClient.post<IOrder>("/orders", payload);
+  return response;
+};
+
+export const initiatePayment = async (orderId: string, paymentMethod: 'STRIPE' | 'SSLCOMMERZ') => {
+  const response = await httpClient.post<IPaymentInitiateResponse>("/payment/initiate", { orderId, paymentMethod });
+  return response;
 };
 
 export const cancelOrder = async (orderId: string) => {

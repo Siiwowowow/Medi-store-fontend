@@ -8,6 +8,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import {
+  IOrder,
+  IWishlistItem,
+} from "@/types/customer.types";
+import {
   Card,
   CardContent,
   CardHeader,
@@ -42,10 +46,12 @@ import { toast } from "sonner";
 export default function CustomerDashboardPage() {
   const { user } = useAuth();
   
-  const { data: orders = [], isLoading: isOrdersLoading } = useQuery({
+  const { data: orderResponse, isLoading: isOrdersLoading } = useQuery({
     queryKey: ["customer-orders"],
     queryFn: () => getCustomerOrders(),
   });
+
+  const orders = orderResponse?.orders ?? [];
 
   const { data: wishlist = [], isLoading: isWishlistLoading, refetch: refetchWishlist } = useQuery({
     queryKey: ["customer-wishlist"],
@@ -79,8 +85,8 @@ export default function CustomerDashboardPage() {
   };
 
   const recentOrders = orders.slice(0, 3);
-  const pendingOrdersCount = orders.filter((o: any) => o.status === "PENDING").length;
-  const activeOrder = orders.find((o: any) => o.status === "SHIPPED");
+  const pendingOrdersCount = orders.filter((o: IOrder) => o.status === "PENDING").length;
+  const activeOrder = orders.find((o: IOrder) => o.status === "SHIPPED");
 
   return (
     <div className="space-y-6 pb-20 lg:pb-6 animate-fade-in-up">
@@ -122,7 +128,7 @@ export default function CustomerDashboardPage() {
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-[#fb6c08]"></span>
                       </span>
                     </p>
-                    <p className="text-[11px] text-white/50 mt-0.5">Expected soon · #{activeOrder.id.substring(0, 8).toUpperCase()}</p>
+                    <p className="text-[11px] text-white/50 mt-0.5">Expected soon · {activeOrder.orderNumber}</p>
                   </div>
                   <Link href={`/customer/orders/${activeOrder.id}`}>
                     <Button variant="link" className="text-[#fb6c08] ml-auto p-0 h-auto font-semibold">
@@ -165,7 +171,7 @@ export default function CustomerDashboardPage() {
           { label: "Total Orders", value: orders.length, icon: Package, color: "text-blue-600", bg: "bg-blue-50", hover: "hover:border-blue-200" },
           { label: "Pending Orders", value: pendingOrdersCount, icon: Clock, color: "text-amber-600", bg: "bg-amber-50", hover: "hover:border-amber-200" },
           { label: "Saved Items", value: wishlist.length, icon: Heart, color: "text-red-500", bg: "bg-red-50", hover: "hover:border-red-200" },
-          { label: "Total Spent", value: `৳${orders.reduce((acc: number, o: any) => acc + o.totalAmount, 0)}`, icon: TrendingDown, color: "text-[#059669]", bg: "bg-[#059669]/10", hover: "hover:border-[#059669]/30" },
+          { label: "Total Spent", value: `৳${orders.reduce((acc: number, o: IOrder) => acc + Number(o.totalAmount), 0)}`, icon: TrendingDown, color: "text-[#059669]", bg: "bg-[#059669]/10", hover: "hover:border-[#059669]/30" },
         ].map((stat, i) => (
           <Card key={i} className={`border-gray-100 shadow-sm transition-all duration-200 cursor-pointer ${stat.hover} hover:shadow-md group rounded-2xl`}>
             <CardContent className="p-5 flex items-center gap-4">
@@ -204,12 +210,12 @@ export default function CustomerDashboardPage() {
                 <div className="p-8 text-center text-sm text-gray-500">No recent orders.</div>
               ) : (
                 <div className="divide-y divide-gray-50">
-                  {recentOrders.map((order: any) => (
+                  {recentOrders.map((order: IOrder) => (
                     <div key={order.id} className="p-5 flex flex-col sm:flex-row gap-4 hover:bg-gray-50 transition-colors">
                       <div className="flex -space-x-3">
                         {order.items?.slice(0,3).map((item: any, i: number) => (
                           <div key={i} className="w-12 h-12 rounded-lg border-2 border-white bg-gray-100 flex items-center justify-center overflow-hidden z-10">
-                            <Image src={item.medicineImage || "/product-placeholder.jpg"} alt="Product" width={40} height={40} className="object-contain p-1" />
+                            <Image src={item.medicineImage || "/product-placeholder.jpg"} alt="Product" width={40} height={40} className="object-contain p-1" style={{ width: "auto", height: "auto" }} />
                           </div>
                         ))}
                         {order.items?.length > 3 && (
@@ -221,7 +227,7 @@ export default function CustomerDashboardPage() {
                       
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-[11px] font-mono font-medium text-gray-500">#{order.id.substring(0, 8).toUpperCase()}</span>
+                          <span className="text-[11px] font-mono font-bold text-[#fb6c08]">{order.orderNumber}</span>
                           <span className="text-gray-300">•</span>
                           <span className="text-[11px] text-gray-500">{dayjs(order.createdAt).format("MMM D, YYYY")}</span>
                         </div>
@@ -248,7 +254,7 @@ export default function CustomerDashboardPage() {
                       </div>
 
                       <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-3 border-t sm:border-t-0 border-gray-100 pt-3 sm:pt-0">
-                        <span className="font-bold text-[#063c28]">৳{order.totalAmount}</span>
+                        <span className="font-bold text-[#063c28]">৳{Number(order.totalAmount)}</span>
                         <div className="flex gap-2">
                           {order.status === "SHIPPED" ? (
                             <Link href={`/customer/orders/${order.id}`}>
@@ -301,7 +307,7 @@ export default function CustomerDashboardPage() {
                         <Heart className="w-3 h-3 text-red-500 fill-red-500" />
                       </button>
                       <div className="h-24 bg-gray-50 rounded-lg mb-3 flex items-center justify-center p-2">
-                        <Image src={item.image || "/product-placeholder.jpg"} alt={item.name} width={60} height={60} className="object-contain" />
+                        <Image src={item.image || "/product-placeholder.jpg"} alt={item.name} width={60} height={60} className="object-contain" style={{ width: "auto", height: "auto" }} />
                       </div>
                       <div className="space-y-1">
                         <p className="text-[9px] font-bold text-[#059669] uppercase tracking-wider">{item.category || "Medicine"}</p>

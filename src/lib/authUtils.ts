@@ -21,8 +21,15 @@ export type RouteConfig = {
 
 // Customer Routes
 export const customerRoutes: RouteConfig = {
-  exact: ["/dashboard", "/cart", "/checkout", "/orders", "/wishlist", "/profile"],
-  pattern: [/^\/orders\/.*/, /^\/profile\/.*/],
+  exact: [
+    "/customer/dashboard", 
+    "/customer/cart", 
+    "/customer/checkout", 
+    "/customer/orders", 
+    "/customer/wishlist", 
+    "/customer/profile"
+  ],
+  pattern: [/^\/customer\/orders\/.*/, /^\/customer\/profile\/.*/],
 };
 
 // Seller Routes

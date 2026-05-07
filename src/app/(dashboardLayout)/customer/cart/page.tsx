@@ -181,9 +181,11 @@ export default function CartPage() {
                 </div>
 
                 <div className="mt-8 space-y-3">
-                  <Button className="w-full bg-[#fb6c08] hover:bg-[#e05e06] text-white rounded-2xl h-12 font-bold shadow-[0_4px_16px_rgba(251,108,8,0.3)] group transition-all">
-                    Checkout Now <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
+                  <Link href="/customer/checkout">
+                    <Button className="w-full bg-[#fb6c08] hover:bg-[#e05e06] text-white rounded-2xl h-12 font-bold shadow-[0_4px_16px_rgba(251,108,8,0.3)] group transition-all">
+                      Checkout Now <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </Link>
                   
                   <div className="flex items-center gap-2 justify-center py-2 px-3 bg-gray-50 rounded-xl">
                     <PackageCheck className="w-4 h-4 text-[#059669]" />

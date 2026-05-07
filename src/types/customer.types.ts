@@ -46,6 +46,13 @@ export interface IOrder {
   shippingAddress: string;
   createdAt: string;
   items: IOrderItem[];
+  payment?: {
+    id: string;
+    status: "PENDING" | "COMPLETED" | "FAILED";
+    transactionId?: string;
+    amount: number;
+    paymentMethod: string;
+  };
 }
 
 export interface IOrderResponse {
