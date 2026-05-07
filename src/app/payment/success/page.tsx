@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useEffect, Suspense } from "react";
@@ -46,7 +47,7 @@ function SuccessContent() {
         createdAt: order.createdAt,
         customerName: order.customerName,
         customerEmail: order.customerEmail,
-        customerPhone: order.customerPhone,
+        customerPhone: order.customerPhone || "N/A",
         shippingAddress: order.shippingAddress,
         items: order.items.map((item: any) => ({
           medicineName: item.medicineName,

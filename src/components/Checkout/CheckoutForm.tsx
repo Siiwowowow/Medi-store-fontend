@@ -75,15 +75,19 @@ export default function CheckoutForm() {
       if (orderRes.success && orderRes.data) {
         toast.success("Order placed! Redirecting to payment...");
         
-        // Initiate Payment
-        const paymentRes = await initiatePayment(orderRes.data.id, paymentMethod);
-        
-        if (paymentRes.success && paymentRes.data?.paymentUrl) {
-          window.location.href = paymentRes.data.paymentUrl;
-        } else {
-          toast.success("Order placed successfully!");
-          router.push("/customer/orders");
+        // Initiate Payment for Online Methods
+        if (paymentMethod === "STRIPE") {
+          const paymentRes = await initiatePayment(orderRes.data.id, paymentMethod);
+          
+          if (paymentRes.success && paymentRes.data?.paymentUrl) {
+            window.location.href = paymentRes.data.paymentUrl;
+            return;
+          }
         }
+        
+        // Fallback for COD or failed online initiation
+        toast.success("Order placed successfully!");
+        router.push("/customer/orders");
       } else {
         toast.error(orderRes.message || "Failed to place order");
       }

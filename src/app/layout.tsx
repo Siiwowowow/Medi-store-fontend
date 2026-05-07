@@ -9,6 +9,9 @@ import { getUserInfo } from "@/services/auth.services";
 import Footer from "@/components/shared/Footer/Footer";
 import { ToastProvider } from "@/providers/ToastProvider";
 import NextTopLoader from "nextjs-toploader";
+import { Suspense } from "react";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "MediStore",
@@ -25,17 +28,23 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className="flex flex-col min-h-screen font-poppins antialiased">
-        <NextTopLoader color="#fb6c08" showSpinner={false} />
+        <Suspense fallback={null}>
+          <NextTopLoader color="#fb6c08" showSpinner={false} />
+        </Suspense>
         <QueryProviders>
           <AuthProvider initialUser={user}>
             <TooltipProvider>
-              <Navbar />
-              <main>
+              <Suspense fallback={<div className="h-16" />}>
+                <Navbar />
+              </Suspense>
+              <main className="flex-1">
                 {children}
                 <Toaster richColors position="top-right" />
                 <ToastProvider />
               </main>
-              <Footer />
+              <Suspense fallback={null}>
+                <Footer />
+              </Suspense>
             </TooltipProvider>
           </AuthProvider>
         </QueryProviders>

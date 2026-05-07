@@ -12,6 +12,8 @@ import FilterSidebar from "./_components/FilterSidebar";
 import MedicineGrid from "./_components/MedicineGrid";
 import Pagination from "./_components/Pagination";
 import MobileFilterDrawer from "./_components/MobileFilterDrawer";
+import { Suspense } from "react";
+import { Loader2 } from "lucide-react";
 import type { Medicine } from "@/services/medicine.service";
 import type { Category } from "@/services/category.service";
 
@@ -26,11 +28,11 @@ interface Filters {
   availability: string;
 }
 
-export default function ShopPage() {
+function ShopContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Extract filters from URL
+  // ... (rest of the component logic)
   const filters = useMemo(() => ({
     search: searchParams.get("search") || "",
     categoryId: searchParams.get("categoryId") || "",
@@ -42,10 +44,10 @@ export default function ShopPage() {
     availability: searchParams.get("availability") || "all",
   }), [searchParams]);
 
+  // ... (existing shop logic)
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  // ✅ Use TanStack Query for Products (with Caching & Background Refresh)
   const { 
     data: productsData, 
     isLoading: productsLoading, 
@@ -66,7 +68,6 @@ export default function ShopPage() {
       if (filters.availability === "instock") params.minStock = 1;
       if (filters.availability === "outofstock") params.stock = 0;
 
-      // Map sort labels to backend params
       const sortMap: Record<string, { sortBy: string; sortOrder: string }> = {
         price_asc: { sortBy: "price", sortOrder: "asc" },
         price_desc: { sortBy: "price", sortOrder: "desc" },
@@ -81,17 +82,16 @@ export default function ShopPage() {
       const response = await medicineService.getAllMedicines(params);
       return response;
     },
-    staleTime: 60 * 1000, // Consider data fresh for 1 minute
+    staleTime: 60 * 1000,
   });
 
-  // ✅ Fetch Initial Categories & Manufacturers
   const { data: categories = [] } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
       const response = await categoryService.getAllCategories({ limit: 50 });
       return response || [];
     },
-    staleTime: 10 * 60 * 1000, // Categories don't change often
+    staleTime: 10 * 60 * 1000,
   });
 
   const { data: manufacturers = [] } = useQuery({
@@ -215,5 +215,17 @@ export default function ShopPage() {
         total={meta.total}
       />
     </div>
+  );
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Loader2 className="w-12 h-12 text-[#fb6c08] animate-spin" />
+      </div>
+    }>
+      <ShopContent />
+    </Suspense>
   );
 }

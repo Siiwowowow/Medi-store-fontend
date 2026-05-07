@@ -44,6 +44,12 @@ export interface IOrder {
   status: "PENDING" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
   totalAmount: number;
   shippingAddress: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone?: string;
+  notes?: string;
+  deliveredAt?: string;
+  cancelledAt?: string;
   createdAt: string;
   items: IOrderItem[];
   payment?: {

@@ -41,7 +41,7 @@ export const createOrder = async (payload: {
   return response;
 };
 
-export const initiatePayment = async (orderId: string, paymentMethod: 'STRIPE' | 'SSLCOMMERZ') => {
+export const initiatePayment = async (orderId: string, paymentMethod: 'STRIPE' | 'SSLCOMMERZ' | 'COD') => {
   const response = await httpClient.post<IPaymentInitiateResponse>("/payment/initiate", { orderId, paymentMethod });
   return response;
 };

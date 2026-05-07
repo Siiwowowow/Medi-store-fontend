@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
@@ -72,7 +74,7 @@ export default function OrderDetailsPage() {
       createdAt: order.createdAt,
       customerName: order.customerName,
       customerEmail: order.customerEmail,
-      customerPhone: order.customerPhone,
+      customerPhone: order.customerPhone || "N/A",
       shippingAddress: order.shippingAddress,
       items: order.items.map((item: any) => ({
         medicineName: item.medicineName,
@@ -334,7 +336,7 @@ export default function OrderDetailsPage() {
           </Card>
 
           {/* Actions */}
-          {order.status === "PENDING" && order.payment?.status !== "PAID" && (
+          {order.status === "PENDING" && order.payment?.status !== "COMPLETED" && (
             <Button 
               onClick={handleCancelOrder}
               variant="outline" 

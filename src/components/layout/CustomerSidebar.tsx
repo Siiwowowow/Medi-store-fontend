@@ -71,7 +71,7 @@ export default function CustomerSidebar({ isCollapsed, setIsCollapsed }: Sidebar
           getCustomerCart()
         ]);
         setCounts({
-          orders: orders?.length || 0,
+          orders: orders?.orders?.length || 0,
           wishlist: wishlist?.length || 0,
           cart: cart?.items?.length || 0
         });

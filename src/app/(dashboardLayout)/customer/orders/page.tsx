@@ -44,7 +44,9 @@ import { useQuery } from "@tanstack/react-query";
 import { getCustomerOrders, cancelOrder, initiatePayment } from "@/services/customer.service";
 import dayjs from "dayjs";
 
-export default function CustomerOrdersPage() {
+import { Suspense } from "react";
+
+function OrdersContent() {
   const [activeTab, setActiveTab] = useState("all");
 
   const { data: orderResponse, isLoading, refetch } = useQuery({
@@ -256,5 +258,18 @@ export default function CustomerOrdersPage() {
         </Tabs>
       </Card>
     </div>
+  );
+}
+
+export default function CustomerOrdersPage() {
+  return (
+    <Suspense fallback={
+      <div className="p-20 flex flex-col items-center justify-center space-y-4">
+        <Loader2 className="w-12 h-12 text-[#fb6c08] animate-spin" />
+        <p className="text-gray-400 font-bold text-sm tracking-widest uppercase">Initializing Dashboard...</p>
+      </div>
+    }>
+      <OrdersContent />
+    </Suspense>
   );
 }
