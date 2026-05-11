@@ -67,13 +67,13 @@ export default function Navbar({ categories = defaultCategories, showTopBar = tr
 
   // Hide Navbar on dashboard pages
   const isDashboard = pathname?.startsWith("/admin") || 
-                      pathname?.startsWith("/user") || 
                       pathname?.startsWith("/customer") || 
                       pathname?.startsWith("/seller");
 
   if (isDashboard) {
     return null;
   }
+
   return (
     <header className="sticky top-0 z-50 w-full bg-shop_dark_green shadow-sm">
       {showTopBar && <TopBar />}

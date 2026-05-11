@@ -9,27 +9,25 @@ if(!API_BASE_URL) {
 }
 
 const instance = axios.create({
-    baseURL: API_BASE_URL,
-    timeout: 30000, // Default 30s — uploads override this per-request
+    baseURL: typeof window === 'undefined' ? API_BASE_URL : '/api/v1',
+    timeout: 30000,
     withCredentials: true,
-    headers: {
-        // 'Content-Type': 'application/json', // Remove default to let axios handle it
-    }
 });
 
-// Axios response interceptor 401 এরর ধরার জন্য
+// Axios response interceptor
 instance.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response && error.response.status === 401) {
             console.warn("Session expired or invalid, redirecting to login...");
-            if (typeof window !== 'undefined') {
-                window.location.href = '/login'; // লগইন পেজে পাঠিয়ে দিচ্ছে
+            if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
+                // window.location.href = '/login'; // Commented out to prevent aggressive redirects during debugging
             }
         }
         return Promise.reject(error);
     }
 );
+
 
 const axiosInstance = () => instance;
 

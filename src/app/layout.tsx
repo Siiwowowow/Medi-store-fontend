@@ -1,22 +1,19 @@
+import Footer from "@/components/shared/Footer/Footer";
+import Navbar from "@/components/shared/Navbar/Navbar";
+import { AuthProvider } from "@/providers/AuthProvider";
+import QueryProvider from "@/providers/QueryProvider";
+import { ToastProvider } from "@/providers/ToastProvider";
+import { getUserInfo } from "@/services/auth.services";
+
 import type { Metadata } from "next";
 import "./globals.css";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import QueryProviders from "@/providers/QueryProvider";
-import { AuthProvider } from "@/providers/AuthProvider";
-import Navbar from "@/components/shared/Navbar/Navbar";
-import { Toaster } from "sonner";
-import { getUserInfo } from "@/services/auth.services";
-import Footer from "@/components/shared/Footer/Footer";
-import { ToastProvider } from "@/providers/ToastProvider";
-import NextTopLoader from "nextjs-toploader";
-import { Suspense } from "react";
-
-export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "MediStore",
-  description: "Trusted Pharmacy",
+  title: "Medi-Store | Your Trusted Online Pharmacy",
+  description: "Browse and buy medicines online with ease. Trusted by thousands.",
 };
+
+export const dynamic = "force-dynamic";
 
 export default async function RootLayout({
   children,
@@ -26,29 +23,23 @@ export default async function RootLayout({
   const user = await getUserInfo();
 
   return (
-    <html lang="en">
-      <body className="flex flex-col min-h-screen font-poppins antialiased">
-        <Suspense fallback={null}>
-          <NextTopLoader color="#fb6c08" showSpinner={false} />
-        </Suspense>
-        <QueryProviders>
+    <html lang="en" suppressHydrationWarning>
+      <body className="antialiased">
+        <QueryProvider>
           <AuthProvider initialUser={user}>
-            <TooltipProvider>
-              <Suspense fallback={<div className="h-16" />}>
-                <Navbar />
-              </Suspense>
-              <main className="flex-1">
+            <ToastProvider />
+            <div className="flex flex-col min-h-screen">
+              <Navbar />
+              <main className="grow">
                 {children}
-                <Toaster richColors position="top-right" />
-                <ToastProvider />
               </main>
-              <Suspense fallback={null}>
-                <Footer />
-              </Suspense>
-            </TooltipProvider>
+              <Footer />
+            </div>
           </AuthProvider>
-        </QueryProviders>
+        </QueryProvider>
       </body>
     </html>
   );
 }
+
+
